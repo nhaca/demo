@@ -25,15 +25,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Chặn phím cơ bản
         document.addEventListener('keydown', e => {
-            if (
-                e.key === 'F12' ||
-                (e.ctrlKey && e.shiftKey && ['i','j','c','s'].includes(e.key.toLowerCase())) ||
-                (e.ctrlKey && e.key.toLowerCase() === 'u','s')
-            ) {
-                e.preventDefault();
-                stopSite();
-            }
-        });
+    if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && ['i', 'j', 'c', 's'].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && ['u', 's'].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+        stopSite();
+    }
+});
+
 
         // Phát hiện DevTools qua size (check chậm)
         setInterval(() => {
@@ -582,3 +583,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 });
+
