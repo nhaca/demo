@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', e => {
             if (
                 e.key === 'F12' ||
-                (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(e.key.toLowerCase())) ||
-                (e.ctrlKey && e.key.toLowerCase() === 'u')
+                (e.ctrlKey && e.shiftKey && ['i','j','c','s'].includes(e.key.toLowerCase())) ||
+                (e.ctrlKey && e.key.toLowerCase() === 'u','s')
             ) {
                 e.preventDefault();
                 stopSite();
@@ -579,5 +579,6 @@ document.addEventListener('DOMContentLoaded', () => {
     //             loadUsers();
     //         }
     //     });
+
 
 });
