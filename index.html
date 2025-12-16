@@ -30,7 +30,9 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
-                    <button class="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600">Trang chủ</button>
+                    <a href="https://vatlieugau.site" class="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600">
+                        Trang chủ
+                    </a>
                     <button class="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600">Thành viên</button>
                     <div class="relative dropdown">
                         <button class="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600">
@@ -48,9 +50,7 @@
                         <div class="dropdown-menu">
                             <a href="#" class="dropdown-item" id="open-login-modal-btn">Đăng nhập</a>
                             <a href="#" class="dropdown-item" id="open-bind-accounts-modal-btn">Liên kết tài khoản</a>
-                            <a href="#" class="dropdown-item">Hồ sơ</a>
                             <a href="#" class="dropdown-item hidden" id="logout-link">Đăng xuất</a>
-                            <a href="/admin-dashboard" class="dropdown-item hidden" id="admin-panel" style="display: none;">Admin Panel</a>
                         </div>
                     </div>
                     <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-300 dark:border-gray-600" aria-label="Chuyển sang chế độ sáng">
@@ -963,16 +963,20 @@
 </main>
     </div>
 
-    <div id="modals-logout">
-        <div id="logout-modal" class="modal-overlay hidden">
-            <div class="modal-content">
-                <button class="modal-close-btn"><i class="fas fa-times"></i></button>
-                <h2 class="modal-title">Xác nhận đăng xuất?</h2>
+<div id="modals-logout">
+    <div id="logout-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn"><i class="fas fa-times"></i></button>
+            <h2 class="modal-title">Xác nhận đăng xuất?</h2>
+
+            <form id="logout-form">
                 <button type="submit" class="btn btn-primary w-full">Đăng xuất</button>
                 <p id="logout-message" class="form-message"></p>
-                </form>
-            </div>
+            </form>
+
         </div>
+    </div>
+</div>
 
         <div id="modals-container">
             <div id="login-modal" class="modal-overlay hidden">
@@ -1023,7 +1027,11 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="youtube-id">UID Youtube:</label>
+                                    <label for="youtube-id">
+                                        <a href="http://youtube.com" target="_blank" class="hover:underline text-blue-600 dark:text-blue-400">
+                                            UID Youtube:
+                                        </a>
+                                    </label>
                                     <input type="text" id="youtube-id" placeholder="VD: @dat-09" class="input-field" required>
                                 </div>
                             </div>
@@ -1040,7 +1048,11 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="tiktok-id">Số tài khoản Tiktok:</label>
+                                    <label for="tiktok-id">
+                                        <a href="https://tiktok.com" target="_blank" class="hover:underline text-blue-600 dark:text-blue-400">
+                                            ID Tiktok:
+                                        </a>
+                                    </label>
                                     <input type="text" id="tiktok-id" placeholder="VD: tiktok.com/@ytb_mhm" class="input-field" required>
                                 </div>
                             </div>
@@ -1057,7 +1069,11 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="facebook-id">ID Facebook:</label>
+                                    <label for="facebook-id">
+                                        <a href="https://facebook.com" target="_blank" class="hover:underline text-blue-600 dark:text-blue-400">
+                                            ID Facebook:
+                                        </a>
+                                    </label>
                                     <input type="text" id="facebook-id" placeholder="VD: 12345678" class="input-field" required>
                                 </div>
                             </div>
@@ -1091,7 +1107,7 @@
                         </div>
                         <div class="card-footer">
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                                Lưu ý: Đối với các nền tảng khác, không cần phải liên kết với tấc cả, chỉ cần chỉnh sửa và gửi đi
+                                Lưu ý: Đối với các nền tảng khác, không cần phải liên kết với tất cả, chỉ cần chỉnh sửa và gửi đi
                             </p>
                         </div>
                     </div>
@@ -1101,6 +1117,10 @@
 
     </div>
 
-    <script src="script.js"></script>
+<div id="pagination" class="pagination flex justify-center items-center gap-2 mt-8 py-4">
+</div>
+
+
+<script src="script.js"></script>
 </body>
 </html>
