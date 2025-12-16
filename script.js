@@ -391,15 +391,19 @@ document.addEventListener('DOMContentLoaded', () => {
     filterCards(); // Bắt đầu bằng việc lọc và hiển thị trang đầu tiên
     // START: LOGIC CHẾ ĐỘ NHÚNG IFRAME (Embed Mode Logic)
     // -------------------------------------------------------------
+    // START: LOGIC CHẾ ĐỘ NHÚNG IFRAME (Embed Mode Logic)
+    // -------------------------------------------------------------
     const resourceContent = document.getElementById('resource-content');
     const embedWrapper = document.getElementById('embed-wrapper');
     const toolIframe = document.getElementById('tool-iframe');
     const embedTitle = document.getElementById('embed-title');
     const closeEmbedBtn = document.getElementById('close-embed-btn');
+    // KHAI BÁO THÊM PHẦN TỬ SPINNER
+    const loadingSpinner = document.getElementById('loading-spinner-overlay');
 
     // 1. Hàm kích hoạt chế độ nhúng
     function activateEmbedMode(toolId) {
-        if (!resourceContent || !embedWrapper || !toolIframe || !embedTitle) {
+        if (!resourceContent || !embedWrapper || !toolIframe || !embedTitle || !loadingSpinner) {
             console.error("Thiếu các phần tử cần thiết cho chế độ nhúng.");
             return;
         }
@@ -407,17 +411,20 @@ document.addEventListener('DOMContentLoaded', () => {
         let url = '';
         let title = '';
 
+        // ... (Giữ nguyên phần xác định URL và Title)
         if (toolId === 'veo3') {
             url = 'https://labs.google/fx/tools/flow';
             title = 'Công cụ: AI veo3';
         } else if (toolId === 'nano-pro') {
-            // Thay thế bằng URL thực tế của Nano Banana Pro nếu có
-            url = 'https://r.search.yahoo.com/rdclks/dWU9M3JsbXZnNWtrMnBhNSZ1dD0xNzY1ODkzNDQ1MzExJnVvPTc0MDExMjE3NzM5OTAxJmx0PTImcz0xJmVzPS5fdG5DZGVJa19DTE5wenNNZU1oRlFLUGhEMjhwZzFCQjF6dmdvMG1LWWFpaURmdzFwSUhRWTZnZlRhcmZIYWoyaWhMcTBNLkZMZy5mNjQt/RV=2/RE=1768485445/RO=14/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de8OsbFkR-DQ_1BFvjv7ZG-ADVUCUyCPDgT5Tu2V0jYDrzojY3RMDWHnhS3_xHoVMUaCVdi_Bg4FvP47xhO3eMPVLqkGByGhaQd40xMJrO1-Cg1JfKYT7CupCtHEWESJPhOc3AD1VrbcwdT7atyEem2xAvsWDF-LuoT_qmdQcxadNOSKsa_9oSBondhgQOwHcIGct_aK3GDRQQixU8iHna1SCSbdP8%26u%3daHR0cHMlM2ElMmYlMmZoaXguYWklMmZpbWFnZS1tb2RlbHMlMmZnb29nbGUtbmFuby1iYW5hbmElMmZuYW5vLWJhbmFuYS1wcm8lM2Z1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZsYW5ndWFnZSUzZGVuJTI2Y2FtcGFpZ25pZCUzZDU3MDY5NjEzOCUyNmFkZ3JvdXBpZCUzZDExODQxNzYwMzk3MjM4MDMlMjZrZXl3b3JkJTNkbmFubyUyNTIwYmFuYW5hJTI1MjBhaSUyNmRldmljZSUzZGMlMjZtc2Nsa2lkJTNkZDAyMjMwMmI5MWZiMTVjZTVhYWQ1OTZhZjRiZTY2NTIlMjZ1dG1fY2FtcGFpZ24lM2RZb2t5X1NTX0ltYWdlX0NQX0VOXyVlNSU5YiU5YiVlNSVhNCVhN18wLjhfTmFub18xMTIxJTI2dXRtX3Rlcm0lM2RuYW5vJTI1MjBiYW5hbmElMjUyMGFpJTI2dXRtX2NvbnRlbnQlM2RuYW5vJTI1MjBiYW5hbmE%26rlid%3dd022302b91fb15ce5aad596af4be6652/RK=2/RS=RVXJSHvRI3JwQRLqGzivPd.n_QA-;_ylt=Awr9.5NFZUFppO0DaHFXNyoA;_ylu=Y29sbwNncTEEcG9zAzMEdnRpZAMEc2VjA292LXRvcA--;_ylc=X3IDMgRydAMw?IG=0afdfb937e8d42478d62cd35cc61384b';
+            url = 'https://ai-generator.artlist.io/image-to-image-ai/nano-banana-pro';
             title = 'Công cụ: Nano Banana Pro';
         } else {
             console.warn('Tool ID không hợp lệ:', toolId);
             return;
         }
+
+        // BƯỚC MỚI 1: HIỂN THỊ SPINNER TRƯỚC KHI TẢI
+        loadingSpinner.style.display = 'flex';
 
         // Ẩn nội dung tài nguyên chính
         resourceContent.style.display = 'none';
@@ -427,31 +434,44 @@ document.addEventListener('DOMContentLoaded', () => {
         toolIframe.src = url;
         embedWrapper.style.display = 'block';
 
-        // Cuộn lên đầu trang (Tùy chọn)
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // 2. Hàm tắt chế độ nhúng
     function deactivateEmbedMode() {
-        if (resourceContent && embedWrapper && toolIframe) {
+        if (resourceContent && embedWrapper && toolIframe && loadingSpinner) {
             embedWrapper.style.display = 'none';
-            toolIframe.src = ''; // Xóa URL để giải phóng tài nguyên
+            toolIframe.src = ''; // Xóa URL
             resourceContent.style.display = 'block';
+            loadingSpinner.style.display = 'none'; // Đảm bảo ẩn spinner khi đóng
         }
     }
 
-    // 3. Sự kiện lắng nghe cho các nút Công cụ AI
+    // 3. XỬ LÝ SỰ KIỆN TẢI XONG CỦA IFRAME
+    if (toolIframe && loadingSpinner) {
+        toolIframe.addEventListener('load', () => {
+            // Ẩn spinner khi nội dung iframe được tải xong
+            loadingSpinner.style.display = 'none';
+        });
+
+        // Xử lý lỗi tải iframe (tùy chọn)
+        toolIframe.addEventListener('error', () => {
+            loadingSpinner.style.display = 'none';
+            alert("Lỗi: Không thể tải công cụ AI. Trang web này có thể chặn nhúng (embedding).");
+        });
+    }
+
+    // 4. Sự kiện lắng nghe cho các nút Công cụ AI (GIỮ NGUYÊN)
     document.querySelectorAll('.dropdown-item[data-tool-id]').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const toolId = e.currentTarget.getAttribute('data-tool-id');
             activateEmbedMode(toolId);
-            // Đóng dropdown menu sau khi nhấp
             e.currentTarget.closest('.dropdown')?.classList.remove('active');
         });
     });
 
-    // 4. Sự kiện lắng nghe cho nút "Đóng Công cụ"
+    // 5. Sự kiện lắng nghe cho nút "Đóng Công cụ" (GIỮ NGUYÊN)
     if (closeEmbedBtn) {
         closeEmbedBtn.addEventListener('click', deactivateEmbedMode);
     }
