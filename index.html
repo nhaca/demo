@@ -117,10 +117,17 @@
         <main class="max-w-[1920px] mx-auto">
 
             <div id="embed-wrapper" style="display: none; width: 100%; height: 100vh;">
-                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4" id="embed-title">Công cụ được nhúng</h2>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4" id="embed-title">Công cụ</h2>
                 <button id="close-embed-btn" class="mb-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors">
-                    <i class="fas fa-times mr-2"></i> Đóng Công cụ
+                    <i class="fas fa-times mr-2"></i> Đóng Công Cụ
                 </button>
+
+                <div id="loading-spinner-overlay" class="loading-overlay">
+                    <div class="spinner-content">
+                        <div class="spinner-icon"></div>
+                        <p class="mt-4 text-lg font-medium">Đang mở AI...</p>
+                    </div>
+                </div>
                 <iframe
                         id="tool-iframe"
                         src=""
