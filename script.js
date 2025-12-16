@@ -1,5 +1,38 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Hàm hiển thị/ẩn lớp phủ "Đăng nhập để xem"
+
+    // =======================================================
+    // I. KHAI BÁO BIẾN VÀ HẰNG SỐ (Tập trung lại)
+    // =======================================================
+    const ITEMS_PER_PAGE = 18; // Theo yêu cầu gần nhất của bạn
+    let isLoggedIn = false;
+
+    const categoryTabsAll = document.querySelectorAll('.category-tab');
+    const subcategoryTabsAll = document.querySelectorAll('.subcategory-tab');
+    const allCards = Array.from(document.querySelectorAll('.resources-grid .material-card'));
+    const emptyMessage = document.querySelector('#empty-message');
+    const paginationContainer = document.getElementById('pagination');
+
+    let currentCat = 'nhanvat';
+    let currentSubcat = null;
+    let currentPage = 1;
+    let filteredCards = [];
+
+    // =======================================================
+    // II. HÀM CHUNG VÀ MODAL UTILITIES
+    // =======================================================
+
+    // --- Utils for Modals ---
+    const modals = document.querySelectorAll('.modal-overlay');
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) { modal.classList.remove('hidden'); modal.classList.add('visible'); document.body.style.overflow = 'hidden'; }
+    }
+    function closeAllModals() {
+        modals.forEach(modal => { modal.classList.remove('visible'); modal.classList.add('hidden'); });
+        document.body.style.overflow = '';
+    }
+
+    // --- Utils for Login Status ---
     function updateUnauthorizedOverlays() {
         const overlays = document.querySelectorAll('.unauthorized-overlay');
         if (isLoggedIn) {
@@ -12,22 +45,171 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-    function handleUnauthorizedClick(event) {
-        event.preventDefault(); // Ngăn hành vi mặc định của thẻ <a>
-        event.stopPropagation(); // Ngăn sự kiện lan truyền
+    window.handleUnauthorizedClick = (event) => { // Dùng window để gọi từ HTML
+        event.preventDefault();
+        event.stopPropagation();
         if (!isLoggedIn) {
-            // Gọi hàm mở modal đăng nhập
-            const loginModal = document.getElementById('login-modal');
-            if (loginModal) {
-                closeAllModals(); // Đảm bảo đóng các modal khác
-                openModal('login-modal');
+            closeAllModals();
+            openModal('login-modal');
+        }
+    };
+
+    // --- Utils for Empty Message Animation ---
+    function wrapLetters(elementId) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+        const text = element.textContent.trim();
+        let wrappedHtml = '';
+        for (let i = 0; i < text.length; i++) {
+            const char = text[i] === ' ' ? '&nbsp;' : text[i];
+            wrappedHtml += `<span style="animation-delay: ${i * 0.1}s;">${char}</span>`;
+        }
+        element.innerHTML = wrappedHtml;
+    }
+
+    // =======================================================
+    // III. LỌC VÀ PHÂN TRANG (PAGINATION LOGIC - ĐÃ SỬA LỖI)
+    // =======================================================
+
+    // 1. Hàm lọc thẻ (Filter)
+    function filterCards() {
+        filteredCards = allCards.filter(card => {
+            const cardCat = card.getAttribute('data-cat');
+            const cardSub = card.getAttribute('data-subcat') || '';
+
+            let shouldShow = false;
+
+            if (currentSubcat && currentSubcat !== 'all') {
+                if (cardSub.includes(currentSubcat)) {
+                    shouldShow = true;
+                }
+            }
+            else if (currentCat) {
+                if (currentCat === 'all' || cardCat === currentCat) {
+                    shouldShow = true;
+                }
+            }
+            return shouldShow;
+        });
+
+        currentPage = 1;
+        setupPagination(filteredCards.length);
+        displayCards(currentPage);
+    }
+
+    // 2. Hàm tạo nút phân trang
+    function createPageButton(text, pageNumber, isDisabled, isActive = false) {
+        const button = document.createElement('button');
+        button.textContent = text;
+
+        button.classList.add('px-3', 'py-1', 'rounded-lg', 'font-medium', 'transition-colors');
+
+        if (isDisabled) {
+            button.disabled = true;
+            button.classList.add('bg-gray-200', 'text-gray-500', 'dark:bg-gray-700', 'dark:text-gray-400', 'cursor-not-allowed');
+        } else if (isActive) {
+            button.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
+        } else {
+            button.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200', 'dark:bg-gray-800', 'dark:text-gray-300', 'dark:hover:bg-gray-700');
+            button.addEventListener('click', () => {
+                currentPage = pageNumber;
+                displayCards(currentPage);
+                setupPagination(filteredCards.length);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        return button;
+    }
+
+    // 3. Hàm thiết lập nút chuyển trang (Pagination - Đã sửa lỗi hiển thị dots)
+    function setupPagination(totalItems) {
+        if (!paginationContainer) return;
+        paginationContainer.innerHTML = '';
+        const pageCount = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+        if (pageCount <= 1) {
+            paginationContainer.style.display = 'none';
+            return;
+        }
+
+        paginationContainer.style.display = 'flex';
+
+        // Nút Prev
+        const prevBtn = createPageButton('◀ Trước', currentPage - 1, currentPage === 1);
+        paginationContainer.appendChild(prevBtn);
+
+        // Logic hiển thị nút số trang (5 nút chính + 1 và cuối + dots)
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(pageCount, startPage + maxVisiblePages - 1);
+
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        // Nút '1' và '...' đầu tiên
+        if (startPage > 1) {
+            paginationContainer.appendChild(createPageButton('1', 1, false, 1 === currentPage));
+            if (startPage > 2) {
+                paginationContainer.appendChild(createPageButton('...', null, true));
             }
         }
-    }
-    let isLoggedIn = false; // <--- KHAI BÁO BIẾN TRẠNG THÁI ĐĂNG NHẬP
-    const ITEMS_PER_PAGE = 18;
 
-    // ===== Anti-DevTools (ĐÃ SỬA CHỮA) =====
+        // Vòng lặp hiển thị các nút số trang
+        for (let i = startPage; i <= endPage; i++) {
+            const pageBtn = createPageButton(i, i, false, i === currentPage);
+            paginationContainer.appendChild(pageBtn);
+        }
+
+        // Nút '...' cuối cùng và nút 'pageCount'
+        if (endPage < pageCount) {
+            if (endPage < pageCount - 1) {
+                paginationContainer.appendChild(createPageButton('...', null, true));
+            }
+            paginationContainer.appendChild(createPageButton(pageCount, pageCount, false, pageCount === currentPage));
+        }
+
+        // Nút Next
+        const nextBtn = createPageButton('Sau ▶', currentPage + 1, currentPage === pageCount);
+        paginationContainer.appendChild(nextBtn);
+    }
+
+    // 4. Hàm hiển thị các thẻ trên trang hiện tại
+    function displayCards(page) {
+        const startIndex = (page - 1) * ITEMS_PER_PAGE;
+        const endIndex = startIndex + ITEMS_PER_PAGE;
+        let hasVisible = false;
+
+        allCards.forEach(card => {
+            card.style.display = 'none';
+        });
+
+        filteredCards.forEach((card, index) => {
+            if (index >= startIndex && index < endIndex) {
+                card.style.display = 'flex'; // Dùng 'flex' để giữ style thẻ
+                hasVisible = true;
+            }
+        });
+
+        if (emptyMessage) {
+            emptyMessage.style.display = hasVisible ? 'none' : 'flex';
+        }
+    }
+
+
+    // =======================================================
+    // IV. CÁC KHỐI SỰ KIỆN VÀ LOGIC KHÁC
+    // =======================================================
+
+    // Khai báo các biến modal cần thiết (cần phải nằm trong DOM)
+    const openLoginModalBtn = document.getElementById('open-login-modal-btn');
+    const openBindAccountsModalBtn = document.getElementById('open-bind-accounts-modal-btn');
+    const openPricingModalBtn = document.getElementById('open-pricing-modal-btn');
+    const closeButtons = document.querySelectorAll('.modal-close-btn');
+    const logoutForm = document.getElementById('logout-form');
+    const logoutLink = document.getElementById('logout-link'); // Lấy link đăng xuất
+
+    // ===== Anti-DevTools (TỪ CODE CỦA BẠN) =====
     (function antiDevToolsLight() {
         function stopSite() {
             document.body.innerHTML = `
@@ -52,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (
                 e.key === 'F12' ||
                 (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(e.key.toLowerCase())) ||
-                (e.ctrlKey && (e.key.toLowerCase() === 'u' || e.key.toLowerCase() === 's')) // Đã sửa cú pháp và thêm chặn Ctrl+S
+                (e.ctrlKey && (e.key.toLowerCase() === 'u' || e.key.toLowerCase() === 's'))
             ) {
                 e.preventDefault();
                 stopSite();
@@ -61,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(() => {
             const gapW = window.outerWidth - window.innerWidth;
             const gapH = window.outerHeight - window.innerHeight;
-            if (gapW > 200 || gapH > 200) { // Đã tăng ngưỡng từ 160 lên 200 để giảm false positive
+            if (gapW > 200 || gapH > 200) {
                 stopSite();
             }
         }, 1500);
@@ -123,24 +305,17 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollRightBtn.addEventListener('click', () => { categoryTabs.scrollBy({ left: 200, behavior: 'smooth' }); });
     }
 
-    // ===== Modal Login & Bind (GIỮ NGUYÊN) =====
-    const modals = document.querySelectorAll('.modal-overlay');
-    const openLoginModalBtn = document.getElementById('open-login-modal-btn');
-    const openBindAccountsModalBtn = document.getElementById('open-bind-accounts-modal-btn');
-    const closeButtons = document.querySelectorAll('.modal-close-btn');
-
-    function openModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) { modal.classList.remove('hidden'); modal.classList.add('visible'); document.body.style.overflow = 'hidden'; }
-    }
-
-    function closeAllModals() {
-        modals.forEach(modal => { modal.classList.remove('visible'); if (['login-modal','bind-accounts-modal'].includes(modal.id)) modal.classList.add('hidden'); });
-        document.body.style.overflow = '';
-    }
-
+    // ===== Modal Buttons Listeners =====
     if (openLoginModalBtn) openLoginModalBtn.addEventListener('click', e => { e.preventDefault(); closeAllModals(); openModal('login-modal'); });
     if (openBindAccountsModalBtn) openBindAccountsModalBtn.addEventListener('click', e => { e.preventDefault(); closeAllModals(); openModal('bind-accounts-modal'); });
+    if (openPricingModalBtn) openPricingModalBtn.addEventListener('click', e => { e.preventDefault(); closeAllModals(); openModal('pricing-modal'); });
+    if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeAllModals();
+            openModal('logout-modal');
+        });
+    }
     closeButtons.forEach(btn => btn.addEventListener('click', closeAllModals));
     modals.forEach(modal => modal.addEventListener('click', e => { if (e.target === modal) closeAllModals(); }));
 
@@ -164,18 +339,53 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!valid) return;
 
             try {
-                // Giả định có API endpoint /api/login
                 const response = await fetch('/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ username: usernameInput.value.trim(), password: passwordInput.value.trim(), rememberMe: document.getElementById('remember-me').checked }) });
                 const data = await response.json();
                 if (data.success) {
                     loginMessage.textContent = 'Đăng nhập thành công! Đang chuyển hướng...';
                     loginMessage.classList.add('success');
+                    isLoggedIn = true;
+                    updateUnauthorizedOverlays();
                     setTimeout(() => { closeAllModals(); window.location.href = data.role==='admin'?"/admin-dashboard":"/user-dashboard"; },1500);
                 } else {
                     loginMessage.textContent = `Đăng nhập thất bại: ${data.message||'Sai tài khoản hoặc mật khẩu.'}`;
                     loginMessage.classList.add('error');
                 }
             } catch (err) { loginMessage.textContent='Đã xảy ra lỗi hệ thống. Vui lòng thử lại.'; loginMessage.classList.add('error'); console.error(err);}
+        });
+    }
+
+    // ===== Logout Form (TỪ CODE CỦA BẠN) =====
+    if (logoutForm) {
+        logoutForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const logoutMessage = document.getElementById('logout-message');
+            logoutMessage.textContent = 'Đang xử lý...';
+            logoutMessage.classList.remove('success', 'error');
+
+            try {
+                const response = await fetch('/api/logout', { method: 'POST' });
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    logoutMessage.textContent = 'Đăng xuất thành công! Đang chuyển hướng...';
+                    logoutMessage.classList.add('success');
+                    isLoggedIn = false;
+                    updateUnauthorizedOverlays();
+                    setTimeout(() => {
+                        closeAllModals();
+                        window.location.reload();
+                    }, 1000);
+
+                } else {
+                    logoutMessage.textContent = `Đăng xuất thất bại: ${data.message || 'Lỗi không xác định.'}`;
+                    logoutMessage.classList.add('error');
+                }
+            } catch (err) {
+                logoutMessage.textContent = 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại.';
+                logoutMessage.classList.add('error');
+                console.error(err);
+            }
         });
     }
 
@@ -189,7 +399,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const id = idInput?.value.trim();
             if (!id) return alert(`Vui lòng nhập ID cho ${platform}.`);
             try {
-                // Giả định có API endpoint /api/accounts/bind
                 const res = await fetch('/api/accounts/bind', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ platform,id }) });
                 const data = await res.json();
                 alert(data.success ? data.message||`Liên kết ${platform} thành công!` : `Liên kết ${platform} thất bại: ${data.message||'Lỗi không xác định.'}`);
@@ -197,29 +406,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ===== Login/Logout UI & Admin User Load (GIỮ NGUYÊN) =====
     // ===== Login/Logout UI & Admin User Load (CẬP NHẬT) =====
     fetch('/api/me').then(r=>r.json()).then(me=>{
         const loginLink=document.getElementById('open-login-modal-btn');
-        const logoutLink=document.getElementById('logout-link');
         const adminPanel=document.getElementById('admin-panel');
 
-        isLoggedIn = me.logged_in; // <-- CẬP NHẬT TRẠNG THÁI ĐĂNG NHẬP
+        isLoggedIn = me.logged_in;
 
-        // Cập nhật giao diện nút Đăng nhập/Đăng xuất
         if(isLoggedIn){ loginLink?.classList.add('hidden'); logoutLink?.classList.remove('hidden'); }
         else { loginLink?.classList.remove('hidden'); logoutLink?.classList.add('hidden'); }
 
-        // Cập nhật giao diện lớp phủ
-        updateUnauthorizedOverlays(); // <--- GỌI HÀM CẬP NHẬT LỚP PHỦ
+        updateUnauthorizedOverlays();
 
         if(isLoggedIn && me.role==='admin'){ if(adminPanel){ adminPanel.style.display='block'; loadUsers(); } }
     }).catch(err => {
         console.log("Không thể kiểm tra trạng thái đăng nhập:", err);
-        updateUnauthorizedOverlays(); // Đảm bảo lớp phủ vẫn hiển thị nếu API lỗi
+        updateUnauthorizedOverlays();
     });
-
-    // ... (Giữ nguyên các hàm loadUsers, filterCards,...)
 
     function loadUsers(){
         fetch('/api/admin/users').then(res=>res.json()).then(data=>{
@@ -236,130 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }).catch(err => console.log("Không thể tải danh sách người dùng admin:", err));
     }
 
-
-    // -------------------------------------------------------------
-    // START: LỌC TÀI NGUYÊN VÀ PHÂN TRANG (GIỮ NGUYÊN)
-    // -------------------------------------------------------------
-
-    const categoryTabsAll = document.querySelectorAll('.category-tab');
-    const subcategoryTabsAll = document.querySelectorAll('.subcategory-tab');
-
-    const allCards = Array.from(document.querySelectorAll('.resources-grid .material-card'));
-    const emptyMessage = document.querySelector('#empty-message');
-    const paginationContainer = document.getElementById('pagination');
-
-    let currentCat = 'nhanvat';
-    let currentSubcat = null;
-    let currentPage = 1;
-    let filteredCards = [];
-
-    // 1. Hàm lọc thẻ (Filter)
-    function filterCards() {
-        // Lọc tất cả các thẻ dựa trên category/subcategory hiện tại
-        filteredCards = allCards.filter(card => {
-            const cardCat = card.getAttribute('data-cat');
-            const cardSub = card.getAttribute('data-subcat') || '';
-
-            let shouldShow = false;
-
-            // A. Nếu đang chọn Subcategory (Ưu tiên Subcat)
-            if (currentSubcat && currentSubcat !== 'all') {
-                if (cardSub.includes(currentSubcat)) {
-                    shouldShow = true;
-                }
-            }
-            // B. Nếu đang chọn Category
-            else if (currentCat) {
-                if (currentCat === 'all' || cardCat === currentCat) {
-                    shouldShow = true;
-                }
-            }
-            return shouldShow;
-        });
-
-        currentPage = 1; // Reset về trang 1 sau khi lọc
-        setupPagination(filteredCards.length); // Cài đặt lại phân trang
-        displayCards(currentPage); // Hiển thị trang đầu tiên
-    }
-
-    // 2. Hàm thiết lập nút chuyển trang (Pagination)
-    function setupPagination(totalItems) {
-        if (!paginationContainer) return;
-        paginationContainer.innerHTML = '';
-        const pageCount = Math.ceil(totalItems / ITEMS_PER_PAGE); // Tính tổng số trang
-
-        if (pageCount <= 1) { // Ẩn phân trang nếu chỉ có 1 trang
-            paginationContainer.style.display = 'none';
-            return;
-        }
-
-        paginationContainer.style.display = 'flex';
-
-        // Nút Prev
-        const prevBtn = createPageButton('Trước', currentPage - 1, currentPage === 1);
-        paginationContainer.appendChild(prevBtn);
-
-        // Các nút số trang
-        for (let i = 1; i <= pageCount; i++) {
-            const pageBtn = createPageButton(i, i, false, i === currentPage);
-            paginationContainer.appendChild(pageBtn);
-        }
-
-        // Nút Next
-        const nextBtn = createPageButton('Sau', currentPage + 1, currentPage === pageCount);
-        paginationContainer.appendChild(nextBtn);
-    }
-
-    // Hàm tạo nút phân trang
-    function createPageButton(text, pageNumber, isDisabled, isActive = false) {
-        const button = document.createElement('button');
-        button.textContent = text;
-        button.classList.add('px-3', 'py-1', 'rounded-lg', 'font-medium', 'transition-colors');
-
-        if (isDisabled) {
-            button.disabled = true;
-            button.classList.add('bg-gray-200', 'text-gray-500', 'dark:bg-gray-700', 'dark:text-gray-400', 'cursor-not-allowed');
-        } else if (isActive) {
-            button.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
-        } else {
-            button.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200', 'dark:bg-gray-800', 'dark:text-gray-300', 'dark:hover:bg-gray-700');
-            button.addEventListener('click', () => {
-                currentPage = pageNumber;
-                displayCards(currentPage);
-                setupPagination(filteredCards.length); // Cập nhật lại trạng thái nút
-                window.scrollTo({ top: 0, behavior: 'smooth' }); // Cuộn lên đầu trang
-            });
-        }
-        return button;
-    }
-
-
-    // 3. Hàm hiển thị các thẻ trên trang hiện tại
-    function displayCards(page) {
-        const startIndex = (page - 1) * ITEMS_PER_PAGE;
-        const endIndex = startIndex + ITEMS_PER_PAGE;
-        let hasVisible = false;
-
-        allCards.forEach((card, index) => {
-            // Kiểm tra xem card có nằm trong danh sách đã lọc VÀ trong phạm vi trang hiện tại không
-            const isFiltered = filteredCards.includes(card);
-
-            if (isFiltered && index >= startIndex && index < endIndex) {
-                card.style.display = 'flex';
-                hasVisible = true;
-            } else {
-                card.style.display = 'none';
-            }
-        });
-
-        // Xử lý thông báo rỗng
-        if (emptyMessage) {
-            emptyMessage.style.display = hasVisible ? 'none' : 'flex';
-        }
-    }
-
-
-    // 4. SỰ KIỆN CLICK CATEGORY (Cập nhật để gọi filterCards)
+    // ===== Lắng nghe sự kiện Category và Subcategory =====
     categoryTabsAll.forEach(tab => {
         tab.addEventListener('click', () => {
             categoryTabsAll.forEach(t => t.classList.remove('active'));
@@ -370,11 +450,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             subcategoryTabsAll.forEach(t => t.classList.remove('active'));
 
-            filterCards(); // Chỉ gọi filterCards
+            filterCards();
         });
     });
 
-    // 5. SỰ KIỆN CLICK SUBCATEGORY (Cập nhật để gọi filterCards)
     subcategoryTabsAll.forEach(tab => {
         tab.addEventListener('click', () => {
             subcategoryTabsAll.forEach(t => t.classList.remove('active'));
@@ -382,26 +461,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             currentSubcat = tab.dataset.subcat;
 
-            filterCards(); // Chỉ gọi filterCards
+            filterCards();
         });
     });
 
-    // 6. CHẠY LẦN ĐẦU KHI TẢI TRANG
-    document.querySelector('.category-tab[data-cat="nhanvat"]')?.classList.add('active');
-    filterCards(); // Bắt đầu bằng việc lọc và hiển thị trang đầu tiên
-    // START: LOGIC CHẾ ĐỘ NHÚNG IFRAME (Embed Mode Logic)
     // -------------------------------------------------------------
-    // START: LOGIC CHẾ ĐỘ NHÚNG IFRAME (Embed Mode Logic)
+    // START: LOGIC CHẾ ĐỘ NHÚNG IFRAME (Embed Mode Logic) (GIỮ NGUYÊN)
     // -------------------------------------------------------------
     const resourceContent = document.getElementById('resource-content');
     const embedWrapper = document.getElementById('embed-wrapper');
     const toolIframe = document.getElementById('tool-iframe');
     const embedTitle = document.getElementById('embed-title');
-    const closeEmbedBtn = document.getElementById('close-embed-btn');
-    // KHAI BÁO THÊM PHẦN TỬ SPINNER
     const loadingSpinner = document.getElementById('loading-spinner-overlay');
+    const closeEmbedBtn = document.getElementById('close-embed-btn');
 
-    // 1. Hàm kích hoạt chế độ nhúng
+
     function activateEmbedMode(toolId) {
         if (!resourceContent || !embedWrapper || !toolIframe || !embedTitle || !loadingSpinner) {
             console.error("Thiếu các phần tử cần thiết cho chế độ nhúng.");
@@ -411,7 +485,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let url = '';
         let title = '';
 
-        // ... (Giữ nguyên phần xác định URL và Title)
         if (toolId === 'veo3') {
             url = 'https://labs.google/fx/tools/flow';
             title = 'Công cụ: AI veo3';
@@ -423,13 +496,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // BƯỚC MỚI 1: HIỂN THỊ SPINNER TRƯỚC KHI TẢI
         loadingSpinner.style.display = 'flex';
-
-        // Ẩn nội dung tài nguyên chính
         resourceContent.style.display = 'none';
-
-        // Cập nhật iframe và hiển thị wrapper
         embedTitle.textContent = title;
         toolIframe.src = url;
         embedWrapper.style.display = 'block';
@@ -437,31 +505,26 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 2. Hàm tắt chế độ nhúng
     function deactivateEmbedMode() {
         if (resourceContent && embedWrapper && toolIframe && loadingSpinner) {
             embedWrapper.style.display = 'none';
-            toolIframe.src = ''; // Xóa URL
+            toolIframe.src = '';
             resourceContent.style.display = 'block';
-            loadingSpinner.style.display = 'none'; // Đảm bảo ẩn spinner khi đóng
+            loadingSpinner.style.display = 'none';
         }
     }
 
-    // 3. XỬ LÝ SỰ KIỆN TẢI XONG CỦA IFRAME
     if (toolIframe && loadingSpinner) {
         toolIframe.addEventListener('load', () => {
-            // Ẩn spinner khi nội dung iframe được tải xong
             loadingSpinner.style.display = 'none';
         });
 
-        // Xử lý lỗi tải iframe (tùy chọn)
         toolIframe.addEventListener('error', () => {
             loadingSpinner.style.display = 'none';
             alert("Lỗi: Không thể tải công cụ AI. Trang web này có thể chặn nhúng (embedding).");
         });
     }
 
-    // 4. Sự kiện lắng nghe cho các nút Công cụ AI (GIỮ NGUYÊN)
     document.querySelectorAll('.dropdown-item[data-tool-id]').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -471,11 +534,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 5. Sự kiện lắng nghe cho nút "Đóng Công cụ" (GIỮ NGUYÊN)
     if (closeEmbedBtn) {
         closeEmbedBtn.addEventListener('click', deactivateEmbedMode);
     }
     // -------------------------------------------------------------
     // END: LOGIC CHẾ ĐỘ NHÚNG IFRAME
     // -------------------------------------------------------------
+
+
+    // =======================================================
+    // V. KHỞI CHẠY BAN ĐẦU
+    // =======================================================
+    document.querySelector('.category-tab[data-cat="nhanvat"]')?.classList.add('active');
+    wrapLetters('empty-message'); // Bật animation cho tin nhắn rỗng
+    filterCards(); // Bắt đầu bằng việc lọc và hiển thị trang đầu tiên
 });
