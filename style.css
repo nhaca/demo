@@ -327,28 +327,21 @@ body.dark .category-tab, body.dark .subcategory-tab {
     border-color: var(--color-primary);
 }
 
-/* Main Content Grid */
-.grid {
+/* * MAIN CONTENT GRID (Dùng cho cấu trúc HTML mới)
+ * Loại bỏ class .grid cũ và thay bằng .resources-grid
+ */
+.resources-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* Cấu hình cột linh hoạt: Tối thiểu 200px, tự động lấp đầy khoảng trống */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1.5rem; /* gap-6 */
 }
-@media (min-width: 768px) {
-    .grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-@media (min-width: 1024px) {
-    .grid {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-}
-@media (min-width: 1280px) {
-    .grid {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-    }
-}
+/* Xóa các @media query cho .grid cũ */
 
+
+/* ----------------------------------
+ * MATERIAL CARD STYLES
+ * ---------------------------------- */
 .material-card {
     background-color: var(--card-bg-light);
     border-radius: 0.5rem; /* rounded-lg */
@@ -382,6 +375,13 @@ body.dark .material-card:hover {
     overflow: hidden;
     border-radius: 0.375rem;
 }
+/* Định nghĩa lại .material-image-wrapper bị lặp ở cuối file */
+.material-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
 .material-image {
     width: 100%;
     height: 100%;
@@ -393,17 +393,16 @@ body.dark .material-card:hover {
 }
 
 .material-overlay {
+    /* Hợp nhất các định nghĩa overlay bị lặp */
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+    inset: 0;
+    background: rgba(0,0,0,0.45);
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: 0.25s ease;
+    z-index: 2;
 }
 .material-card:hover .material-overlay {
     opacity: 1;
@@ -439,6 +438,25 @@ body.dark .material-title {
 body.dark .material-subtitle {
     color: var(--placeholder-dark);
 }
+
+/* BADGE BẢN QUYỀN */
+.badge-copyright {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: linear-gradient(135deg, #ff6a00, #ff9500);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* ----------------------------------
+ * UTILITY STYLES
+ * ---------------------------------- */
 
 /* Button Styles */
 .btn {
@@ -482,7 +500,27 @@ body.dark .material-subtitle {
     background-color: #1e7e34;
 }
 
-/* Modal Styling */
+/* Empty Message */
+.empty-message {
+    /* Đảm bảo style không bị conflict với Tailwind's hidden */
+    display: flex !important; /* Mặc định là flex (để hiển thị trung tâm nếu cần) */
+    justify-content: center;
+    align-items: center;
+    color: var(--text-light);
+    background-color: transparent;
+    text-align: center;
+    padding: 2rem;
+    font-weight: 500;
+    font-size: 1.125rem;
+}
+body.dark .empty-message {
+    color: var(--text-dark);
+}
+
+
+/* ----------------------------------
+ * MODAL STYLES
+ * ---------------------------------- */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -524,19 +562,9 @@ body.dark .modal-content {
     opacity: 1;
 }
 
-/* Specific modal sizes */
-.modal-content.large-modal {
-    max-width: 720px;
-}
-.modal-content.ultra-large-modal {
-    max-width: 960px;
-    padding: 2rem 3rem;
-}
-
 .modal-content.bind-accounts-modal-content {
-    max-width: 1000px; /* A bit wider for the grid */
+    max-width: 1000px;
 }
-
 
 .modal-close-btn {
     position: absolute;
@@ -617,440 +645,6 @@ body.dark .modal-form .input-icon-wrapper .icon {
 }
 .form-message.error {
     color: var(--color-danger);
-}
-
-
-/* VIP Packages Modal Styling */
-.vip-packages-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
-}
-
-.vip-package-card {
-    background-color: var(--card-bg-light);
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    border: 1px solid transparent; /* Default border */
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-body.dark .vip-package-card {
-    background-color: var(--card-bg-dark);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-.vip-package-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-}
-body.dark .vip-package-card:hover {
-    box-shadow: 0 8px 15px rgba(0,0,0,0.25);
-}
-
-.vip-package-card.active {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
-}
-
-.vip-package-card.recommend {
-    border: 2px solid #ef4444; /* red-500 */
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.2);
-}
-body.dark .vip-package-card.recommend {
-    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
-}
-.vip-package-card.recommend:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 25px rgba(239, 68, 68, 0.3);
-}
-
-.vip-package-card .badge {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: #ef4444; /* red-500 */
-    color: white;
-    font-size: 0.75rem;
-    padding: 0.25rem 1rem;
-    border-bottom-left-radius: 0.75rem;
-    font-weight: 700;
-}
-
-.vip-package-card .package-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-.vip-package-card .package-price {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--color-primary);
-    margin-bottom: 0.5rem;
-}
-.vip-package-card.recommend .package-price {
-    color: #ef4444; /* red-500 */
-}
-.vip-package-card.premium .package-price {
-    color: #f97316; /* orange-500 */
-}
-
-.vip-package-card .package-duration {
-    font-size: 1rem;
-    font-weight: 400;
-    color: var(--placeholder-light);
-}
-body.dark .vip-package-card .package-duration {
-    color: var(--placeholder-dark);
-}
-
-.vip-package-card ul.package-features {
-    list-style: none;
-    padding: 0;
-    margin: 1.5rem 0;
-    text-align: left;
-    flex-grow: 1;
-}
-
-.vip-package-card ul li {
-    font-size: 0.9rem;
-    color: var(--text-light);
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: flex-start;
-}
-body.dark .vip-package-card ul li {
-    color: var(--text-dark);
-}
-
-.vip-package-card ul li i {
-    color: var(--color-success);
-    margin-right: 0.5rem;
-    margin-top: 0.15rem; /* Align icon better with text */
-}
-
-.vip-package-card .btn-select {
-    display: block;
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: white;
-    background-color: var(--color-primary);
-    transition: background-color 0.2s ease;
-}
-.vip-package-card .btn-select:hover {
-    background-color: var(--color-primary-hover);
-}
-.vip-package-card.premium .btn-select {
-    background-color: #f97316; /* orange-500 */
-}
-.vip-package-card.premium .btn-select:hover {
-    background-color: #ea580c; /* orange-600 */
-}
-.vip-package-card.recommend .btn-select {
-    background-color: #ef4444; /* red-500 */
-}
-.vip-package-card.recommend .btn-select:hover {
-    background-color: #dc2626; /* red-600 */
-}
-.vip-package-card.free .btn-select {
-    background-color: var(--color-secondary);
-}
-.vip-package-card.free .btn-select:hover {
-    background-color: #5a6268;
-}
-
-
-/* Payment Warning/Details Modal Styling */
-.payment-warning-modal-content {
-    padding: 0;
-    overflow: hidden;
-    max-width: 1000px;
-}
-.payment-warning-modal-layout {
-    display: flex;
-    min-height: 500px;
-}
-
-.payment-sidebar {
-    width: 380px;
-    min-width: 380px;
-    background-color: #f8f9fa; /* light-100 */
-    border-right: 1px solid var(--border-light);
-    padding: 2rem;
-}
-body.dark .payment-sidebar {
-    background-color: #253140; /* custom dark bg */
-    border-right-color: var(--border-dark);
-}
-
-.payment-sidebar .back-btn {
-    display: flex;
-    align-items: center;
-    font-size: 0.875rem;
-    color: var(--color-primary);
-    margin-bottom: 2rem;
-}
-.payment-sidebar .back-btn i {
-    margin-right: 0.5rem;
-}
-.payment-sidebar .sidebar-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-light);
-}
-body.dark .payment-sidebar .sidebar-title {
-    color: var(--text-dark);
-}
-.payment-sidebar .sidebar-subtitle {
-    font-size: 0.9rem;
-    color: var(--text-light);
-    margin-bottom: 1.5rem;
-}
-body.dark .payment-sidebar .sidebar-subtitle {
-    color: var(--text-dark);
-}
-
-.order-summary-card, .total-summary-card {
-    background-color: var(--card-bg-light);
-    border-radius: 0.5rem;
-    padding: 1.25rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-}
-body.dark .order-summary-card, body.dark .total-summary-card {
-    background-color: var(--card-bg-dark);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-
-.order-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.95rem;
-    color: var(--text-light);
-}
-body.dark .order-item {
-    color: var(--text-dark);
-}
-.order-item span:first-child {
-    color: var(--placeholder-light);
-}
-body.dark .order-item span:first-child {
-    color: var(--placeholder-dark);
-}
-
-.total-summary-card .font-bold {
-    font-weight: 700;
-}
-.total-summary-card .text-blue-600 {
-    color: var(--color-primary);
-}
-.total-summary-card .text-2xl {
-    font-size: 1.5rem;
-}
-
-.discount-input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    background-color: var(--input-bg-light);
-    border: 1px solid var(--border-light);
-    border-radius: 0.5rem;
-    padding-left: 0.75rem;
-    height: 3rem;
-}
-body.dark .discount-input-wrapper {
-    background-color: var(--input-bg-dark);
-    border-color: var(--border-dark);
-}
-
-.discount-input-wrapper .icon {
-    color: var(--placeholder-light);
-    margin-right: 0.5rem;
-}
-body.dark .discount-input-wrapper .icon {
-    color: var(--placeholder-dark);
-}
-
-#discount-code-input {
-    flex-grow: 1;
-    border: none;
-    padding: 0.5rem 0;
-    background: transparent;
-    border-radius: 0;
-    height: 100%;
-}
-#discount-code-input:focus {
-    box-shadow: none;
-}
-
-.discount-input-wrapper .btn-apply {
-    background-color: var(--color-primary);
-    color: white;
-    padding: 0 1rem;
-    height: 100%;
-    border-radius: 0 0.5rem 0.5rem 0;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-}
-.discount-input-wrapper .btn-apply:hover {
-    background-color: var(--color-primary-hover);
-}
-
-
-.payment-main {
-    flex-grow: 1;
-    padding: 2rem;
-}
-
-.payment-methods-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-}
-
-.payment-method-card {
-    display: flex;
-    align-items: center;
-    background-color: var(--card-bg-light);
-    border: 2px solid var(--border-light);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-}
-body.dark .payment-method-card {
-    background-color: var(--card-bg-dark);
-    border-color: var(--border-dark);
-}
-
-.payment-method-card:hover:not(.disabled) {
-    border-color: rgba(52, 152, 219, 0.5);
-    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
-}
-
-.payment-method-card.active:not(.disabled) {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 1px var(--color-primary), 0 0 0 4px rgba(52, 152, 219, 0.2);
-}
-
-.payment-method-card .payment-method-icon {
-    width: 3rem;
-    height: 3rem;
-    object-fit: contain;
-    margin-right: 1rem;
-    border-radius: 0.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    color: var(--color-primary);
-}
-
-.payment-method-card.disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.payment-method-card.active .check-icon {
-    display: block;
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-}
-.payment-method-card:not(.active) .check-icon {
-    display: none;
-}
-
-.payment-method-title {
-    font-weight: 600;
-    color: var(--text-light);
-    margin-bottom: 0.25rem;
-}
-body.dark .payment-method-title {
-    color: var(--text-dark);
-}
-
-.payment-method-description {
-    font-size: 0.875rem;
-    color: var(--placeholder-light);
-}
-body.dark .payment-method-description {
-    color: var(--placeholder-dark);
-}
-
-.payment-details-section {
-    padding: 1rem 0;
-}
-
-.qr-code-display {
-    text-align: center;
-}
-
-.bank-info-card {
-    background-color: var(--card-bg-light);
-    border: 1px solid var(--border-light);
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-body.dark .bank-info-card {
-    background-color: var(--card-bg-dark);
-    border-color: var(--border-dark);
-}
-
-.bank-info-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px dashed var(--border-light);
-    font-size: 0.95rem;
-    color: var(--text-light);
-}
-body.dark .bank-info-item {
-    color: var(--text-dark);
-    border-bottom-color: var(--border-dark);
-}
-.bank-info-item:last-child {
-    border-bottom: none;
-}
-.bank-info-item span:first-child {
-    color: var(--placeholder-light);
-}
-body.dark .bank-info-item span:first-child {
-    color: var(--placeholder-dark);
-}
-
-.bank-info-item .copy-btn {
-    background-color: var(--color-light);
-    border: 1px solid var(--border-light);
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-    color: var(--color-primary);
-    transition: background-color 0.2s;
-}
-body.dark .bank-info-item .copy-btn {
-    background-color: var(--input-bg-dark);
-    border-color: var(--border-dark);
-    color: var(--color-primary);
-}
-.bank-info-item .copy-btn:hover {
-    background-color: #e0e0e0;
-}
-body.dark .bank-info-item .copy-btn:hover {
-    background-color: #374151;
 }
 
 
@@ -1197,8 +791,13 @@ body.dark .register-new-platform-card tbody tr:nth-child(even) {
     background-color: #2f3844;
 }
 
+/* ----------------------------------
+ * MEDIA QUERIES (RESPONSIVENESS)
+ * ---------------------------------- */
+
 @media (max-width: 768px) {
-    .modal-content.large-modal, .modal-content.ultra-large-modal, .modal-content.bind-accounts-modal-content {
+    /* Điều chỉnh cho modal Liên kết Tài khoản */
+    .modal-content.bind-accounts-modal-content {
         width: 100%;
         max-width: 100%;
         margin: 1rem;
@@ -1206,48 +805,110 @@ body.dark .register-new-platform-card tbody tr:nth-child(even) {
         max-height: 90vh;
         overflow-y: auto;
     }
-    .payment-warning-modal-layout {
-        flex-direction: column;
-    }
-    .payment-sidebar {
-        width: 100%;
-        min-width: unset;
-        border-right: none;
-        border-bottom: 1px solid var(--border-light);
-    }
-    body.dark .payment-sidebar {
-        border-bottom-color: var(--border-dark);
-    }
-    .vip-packages-grid, .bind-accounts-grid {
+
+    /* Điều chỉnh lưới Liên kết Tài khoản cho mobile */
+    .bind-accounts-grid {
         grid-template-columns: 1fr;
     }
-    .admin-panel {
-        margin-top: 30px;
-        padding: 20px;
-        border: 1px solid #00ffff55;
-        background: #050b15;
-        box-shadow: 0 0 20px #00ffff55;
+
+    /* Ẩn scrollbar cho Chrome, Edge, Safari */
+    ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
     }
 
-    .neon-title {
-        color: #00ffff;
-        text-shadow: 0 0 10px #00ffff;
-        margin-bottom: 15px;
+    /* Ẩn scrollbar cho Firefox */
+    html {
+        scrollbar-width: none;
     }
 
-    .user-table table {
-        width: 100%;
-        border-collapse: collapse;
-        color: #fff;
+    /* Ẩn scrollbar cho IE, Edge cũ */
+    body {
+        -ms-overflow-style: none;
     }
+}
 
-    .user-table th, .user-table td {
-        padding: 10px;
-        border-bottom: 1px solid #00ffff33;
-    }
+/* Xóa các style Admin Panel không cần thiết */
 
-    .user-table th {
-        color: #00ffff;
-    }
+/* Ẩn/Hiện nội dung tab */
+.tab-content .content {
+    display: none;           /* ẩn tất cả nội dung */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out; /* hiệu ứng mờ dần */
+}
 
+.tab-content .content.active {
+    display: block;          /* hiển thị nội dung hiện tại */
+    opacity: 1;              /* mờ → hiện */
+}
+
+/* PHÂN TRANG (PAGINATION) STYLES */
+#pagination button {
+    min-width: 40px;
+    height: 40px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-card);
+    color: var(--text-color);
+    padding: 8px 12px;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+/* Hiệu ứng Hover (chế độ sáng) */
+#pagination button:hover:not(:disabled):not(.active) {
+    background-color: #e5e7eb;
+}
+
+/* Hiệu ứng Hover (chế độ tối) */
+.dark #pagination button:hover:not(:disabled):not(.active) {
+    background-color: #3e4c5f;
+}
+
+/* Nút trang đang hoạt động (Active Page) */
+#pagination button.active {
+    background-color: var(--color-primary) !important;
+    color: white !important;
+    border-color: var(--color-primary) !important;
+}
+
+/* Nút bị vô hiệu hóa (Disabled - Trước/Sau ở trang đầu/cuối) */
+#pagination button:disabled {
+    cursor: not-allowed;
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    border-color: #f3f4f6;
+    opacity: 0.6;
+}
+.dark #pagination button:disabled {
+    background-color: #374151;
+    color: #4b5563;
+    border-color: #374151;
+}
+/* Lớp phủ chặn tương tác khi chưa đăng nhập */
+.unauthorized-overlay {
+    position: absolute;
+    inset: 0; /* Đảm bảo lớp phủ che phủ toàn bộ material-card */
+    background: rgba(0, 0, 0, 0.65); /* Màu đen trong suốt */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10; /* Đặt trên hình ảnh và nút khác */
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none; /* Rất quan trọng: Mặc định không chặn tương tác */
+    border-radius: 12px; /* Đồng nhất với ảnh */
+}
+
+/* Hiển thị lớp phủ và chặn sự kiện chuột khi cần */
+.unauthorized-overlay.visible {
+    opacity: 1;
+    pointer-events: auto; /* Chặn click khi lớp phủ hiển thị */
+}
+
+/* Ẩn hiệu ứng hover mặc định khi lớp phủ chặn đang hiển thị */
+.material-card:has(.unauthorized-overlay.visible):hover {
+    transform: none;
+    box-shadow: none;
 }
