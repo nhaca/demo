@@ -1,586 +1,361 @@
-document.addEventListener('DOMContentLoaded', () => {
-    (function antiDevToolsLight() {
+document.addEventListener((function(_0x5b4a,_0x0c2d){const _0x8f3b=(function(){let _0x6a0c=!![];return function(_0x7d1a,_0x2e8b){if(!_0x6a0c)return;const _0x4f2d=_0x7d1a['constructor'](..._0x2e8b)['bind'](_0x7d1a);return _0x6a0c=![],_0x4f2d;};}());const _0x1b7e=_0x8f3b(Function,'return this')['call'](null,0x10b,0x10a);_0x5b4a.addEventListener(_0x0c2d,_0x1b7e,![],0x10b);}),'DOMContentLoaded',null);
 
-        function stopSite() {
-            document.body.innerHTML = `
-            <div style="
-                display:flex;
-                justify-content:center;
-                align-items:center;
-                height:100vh;
-                background:#0b0b0b;
-                color:#ff4444;
-                font-size:22px;
-                font-weight:600;
-                text-align:center;
-            ">
-                ⚠️ Truy cập bị hạn chế<br>
-                Vui lòng đóng DevTools
-            </div>
-        `;
+((_0x5f3a) => {
+    let _0x4f2d = ![];
+    const _0x2e8b = 0x12;
+
+    const _0x1b7e = (_0x6a0c = _0x4f2d) => {
+        document.querySelectorAll(['.unauthorized', '-overlay'].join(''))['forEach']((_0x8f3b) => (
+            _0x6a0c ? _0x8f3b.classList.remove('visible') : _0x8f3b.classList.add('visible')
+        ));
+    };
+
+    const _0x3c9a = (_0x0c2d) => {
+        void _0x0c2d.preventDefault(), void _0x0c2d.stopPropagation();
+        if (!_0x4f2d) {
+            const _0x7d1a = document['get' + 'ElementById'](['login', '-modal'].join(''));
+            _0x7d1a && (_0x3e4f(), _0x2c3d('login-modal'));
         }
+    };
 
-        // Chặn chuột phải
-        document.addEventListener('contextmenu', e => e.preventDefault());
-
-        // Chặn phím cơ bản
-        document.addEventListener('keydown', e => {
-    if (
-        e.key === 'F12' ||
-        (e.ctrlKey && e.shiftKey && ['i', 'j', 'c', 's'].includes(e.key.toLowerCase())) ||
-        (e.ctrlKey && ['u', 's'].includes(e.key.toLowerCase()))
-    ) {
-        e.preventDefault();
-        stopSite();
-    }
-});
-
-
-        // Phát hiện DevTools qua size (check chậm)
+    ((_0x9e1f) => {
+        const _0x7d1a = () => {
+            const _0x0a1b = ['<div style="', 'display:flex;', 'justify-content:center;', 'align-items:center;', 'height:100vh;', 'background:#0b0b0b;', 'color:#ff4444;', 'font-size:22px;', 'font-weight:600;', 'text-align:center;', '">⚠️ Truy cập bị hạn chế<br>Vui lòng đóng DevTools</div>'].join('');
+            document.body.innerHTML = _0x0a1b;
+        };
+        document.addEventListener('contextmenu', (_0x0a1b) => _0x0a1b.preventDefault());
+        document.addEventListener('keydown', (_0x0a1b) => {
+            const _0x1c2d = _0x0a1b.key;
+            const _0x2d3e = _0x0a1b.ctrlKey;
+            const _0x3e4f_a = _0x0a1b.shiftKey;
+            ((_0x1c2d === 'F12') || (_0x2d3e && _0x3e4f_a && ['i', 'j', 'c']['includes'](_0x1c2d['toLowerCase']())) || (_0x2d3e && (_0x1c2d['toLowerCase']() === 'u' || _0x1c2d['toLowerCase']() === 's'))) && (
+                _0x0a1b.preventDefault(), _0x7d1a()
+            );
+        });
         setInterval(() => {
-            const gapW = window.outerWidth - window.innerWidth;
-            const gapH = window.outerHeight - window.innerHeight;
-            if (gapW > 160 || gapH > 160) {
-                stopSite();
-            }
-        }, 1500); // 1.5s / lần → rất nhẹ
-
+            const _0x4a5b = window.outerWidth - window.innerWidth;
+            const _0x5c6d = window.outerHeight - window.innerHeight;
+            ((_0x4a5b > (0xC8 | 0x0)) || (_0x5c6d > (0xC8 | 0x0))) && (_0x7d1a());
+        }, (0x5DC | 0x0));
     })();
 
-    // --- Theme Toggle ---
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const htmlElement = document.documentElement;
+    const _0x6a0c = document['get' + 'ElementById'](['theme', '-toggle'].join(''));
+    const _0x8f3b = document.documentElement;
+    const _0x0c2d = localStorage['getItem']('theme');
 
-    const currentTheme = localStorage.getItem('theme');
-    if (currentTheme) {
-        htmlElement.classList.add(currentTheme);
-    } else {
-        // Default to dark mode based on the provided HTML
-        htmlElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-    }
+    _0x0c2d ? _0x8f3b.classList.add(_0x0c2d) : (_0x8f3b.classList.add('dark'), localStorage['setItem']('theme', 'dark'));
 
-    themeToggleBtn.addEventListener('click', () => {
-        if (htmlElement.classList.contains('dark')) {
-            htmlElement.classList.remove('dark');
-            htmlElement.classList.add('light');
-            localStorage.setItem('theme', 'light');
-            themeToggleBtn.innerHTML = '<i class="fas fa-moon w-5 h-5 text-indigo-600"></i>'; // Moon icon for light mode
-            themeToggleBtn.setAttribute('aria-label', 'Chuyển sang chế độ tối');
-        } else {
-            htmlElement.classList.remove('light');
-            htmlElement.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
-            themeToggleBtn.innerHTML = '<i class="fas fa-sun w-5 h-5 text-yellow-600"></i>'; // Sun icon for dark mode
-            themeToggleBtn.setAttribute('aria-label', 'Chuyển sang chế độ sáng');
-        }
+    const _0x5b4a = () => {
+        _0x8f3b.classList.contains('dark') ? (
+            _0x6a0c.innerHTML = '<i class="fas fa-sun w-5 h-5 text-yellow-600"></i>',
+                _0x6a0c['setAttribute']('aria-label', ['Chuyển sang chế', ' độ sáng'].join(''))
+        ) : (
+            _0x6a0c.innerHTML = '<i class="fas fa-moon w-5 h-5 text-indigo-600"></i>',
+                _0x6a0c['setAttribute']('aria-label', ['Chuyển sang chế', ' độ tối'].join(''))
+        );
+    };
+
+    _0x6a0c && (_0x6a0c.addEventListener('click', () => {
+        _0x8f3b.classList.toggle('dark');
+        _0x8f3b.classList.toggle('light');
+        localStorage['setItem']('theme', _0x8f3b.classList.contains('dark') ? 'dark' : 'light');
+        _0x5b4a();
+    }), _0x5b4a());
+
+    const _0x9d5f = document['get' + 'ElementById'](['announcement', '-banner'].join(''));
+    const _0x1a2b = document['get' + 'ElementById'](['close-banner', '-btn'].join(''));
+    _0x1a2b && _0x1a2b.addEventListener('click', () => {
+        _0x9d5f.style.display = 'none';
     });
 
-    // Initialize the icon based on current theme
-    if (htmlElement.classList.contains('dark')) {
-        themeToggleBtn.innerHTML = '<i class="fas fa-sun w-5 h-5 text-yellow-600"></i>';
-        themeToggleBtn.setAttribute('aria-label', 'Chuyển sang chế độ sáng');
-    } else {
-        themeToggleBtn.innerHTML = '<i class="fas fa-moon w-5 h-5 text-indigo-600"></i>';
-        themeToggleBtn.setAttribute('aria-label', 'Chuyển sang chế độ tối');
-    }
-
-    // --- Announcement Banner ---
-    const announcementBanner = document.getElementById('announcement-banner');
-    const closeBannerBtn = document.getElementById('close-banner-btn');
-
-    if (closeBannerBtn) {
-        closeBannerBtn.addEventListener('click', () => {
-            announcementBanner.style.display = 'none';
+    document.querySelectorAll('.dropdown')['forEach']((_0x7c3d) => {
+        const _0x9e1f = _0x7c3d['querySelector']('button');
+        _0x9e1f.addEventListener('click', () => {
+            document.querySelectorAll('.dropdown')['forEach']((_0x0a1b) => (_0x0a1b !== _0x7c3d) && _0x0a1b.classList.remove('active'));
+            _0x7c3d.classList.toggle('active');
         });
-    }
-
-    // --- Dropdown Menus ---
-    const dropdowns = document.querySelectorAll('.dropdown');
-    dropdowns.forEach(dropdown => {
-        const button = dropdown.querySelector('button');
-        const menu = dropdown.querySelector('.dropdown-menu');
-
-        button.addEventListener('click', () => {
-            // Close other dropdowns
-            dropdowns.forEach(otherDropdown => {
-                if (otherDropdown !== dropdown) {
-                    otherDropdown.classList.remove('active');
-                }
-            });
-            dropdown.classList.toggle('active');
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (event) => {
-            if (!dropdown.contains(event.target)) {
-                dropdown.classList.remove('active');
-            }
-        });
+        document.addEventListener('click', (_0x0a1b) => (!_0x7c3d['contains'](_0x0a1b.target)) && _0x7c3d.classList.remove('active'));
     });
 
-    // --- Category Tabs Scrolling ---
-    const categoryTabs = document.getElementById('category-tabs');
-    const scrollLeftBtn = document.querySelector('.category-nav-wrapper .nav-scroll-btn.left-0');
-    const scrollRightBtn = document.querySelector('.category-nav-wrapper .nav-scroll-btn.right-0');
-
-    if (categoryTabs && scrollLeftBtn && scrollRightBtn) {
-        scrollLeftBtn.addEventListener('click', () => {
-            categoryTabs.scrollBy({
-                left: -200, // Scroll 200px to the left
-                behavior: 'smooth'
-            });
+    const _0x2f7c = document['get' + 'ElementById'](['category', '-tabs'].join(''));
+    const _0x4e6d = document['querySelector'](['.category-nav-wrapper .nav-scroll-btn.left', '-0'].join(''));
+    const _0x6b8f = document['querySelector'](['.category-nav-wrapper .nav-scroll-btn.right', '-0'].join(''));
+    (_0x2f7c && _0x4e6d && _0x6b8f) && (_0x4e6d.addEventListener('click', () => {
+        _0x2f7c['scrollBy']({
+            left: -0xC8,
+            behavior: 'smooth'
         });
-
-        scrollRightBtn.addEventListener('click', () => {
-            categoryTabs.scrollBy({
-                left: 200, // Scroll 200px to the right
-                behavior: 'smooth'
-            });
+    }), _0x6b8f.addEventListener('click', () => {
+        _0x2f7c['scrollBy']({
+            left: 0xC8,
+            behavior: 'smooth'
         });
+    }));
 
-        // Add active state to category/subcategory tabs
-        const allCategoryTabs = document.querySelectorAll('.category-tab');
-        allCategoryTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                allCategoryTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                // In a real app, this would filter the main content grid
-                console.log('Category selected:', tab.textContent);
-            });
+    const _0x1d2c = document.querySelectorAll('.modal-overlay');
+    const _0x8f3e = document['get' + 'ElementById'](['open-login', '-modal-btn'].join(''));
+    const _0x9a7b = document['get' + 'ElementById'](['open-bind-accounts', '-modal-btn'].join(''));
+    const _0x0b9c = document.querySelectorAll('.modal-close-btn');
+
+    const _0x2c3d = (_0x7d1a) => {
+        const _0x0a1b = document['get' + 'ElementById'](_0x7d1a);
+        _0x0a1b && (_0x0a1b.classList.remove('hidden'), _0x0a1b.classList.add('visible'), document.body.style.overflow = 'hidden');
+    };
+
+    const _0x3e4f = () => {
+        _0x1d2c['forEach']((_0x7d1a) => {
+            _0x7d1a.classList.remove('visible');
+            (['login-modal', 'bind-accounts-modal']['includes'](_0x7d1a.id)) && _0x7d1a.classList.add('hidden');
         });
+        document.body.style.overflow = '';
+    };
 
-        const allSubcategoryTabs = document.querySelectorAll('.subcategory-tab');
-        allSubcategoryTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                allSubcategoryTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                console.log('Subcategory selected:', tab.textContent);
-            });
-        });
-    }
-
-    // --- Modal Functionality ---
-    const modals = document.querySelectorAll('.modal-overlay');
-    const openLoginModalBtn = document.getElementById('open-login-modal-btn');
-    const openVipModalBtn = document.getElementById('open-vip-modal-btn');
-    const openBindAccountsModalBtn = document.getElementById('open-bind-accounts-modal-btn');
-    const closeButtons = document.querySelectorAll('.modal-close-btn');
-
-    function openModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            // FIX LỖI: Loại bỏ lớp 'hidden' để modal có thể hiển thị
-            modal.classList.remove('hidden');
-
-            modal.classList.add('visible');
-            document.body.style.overflow = 'hidden'; // Prevent scrolling
-        }
-    }
-
-    function closeAllModals() {
-        modals.forEach(modal => {
-            modal.classList.remove('visible');
-            // Thêm lại lớp 'hidden' khi đóng để đảm bảo trạng thái ban đầu (nếu nó tồn tại trong HTML)
-            if (modal.id === 'login-modal' || modal.id === 'vip-packages-modal' || modal.id === 'payment-warning-modal' || modal.id === 'bind-accounts-modal') {
-                modal.classList.add('hidden');
-            }
-        });
-        document.body.style.overflow = ''; // Restore scrolling
-    }
-
-    // Attach event listeners to open buttons
-    if (openLoginModalBtn) openLoginModalBtn.addEventListener('click', (e) => { e.preventDefault(); closeAllModals(); openModal('login-modal'); });
-    if (openVipModalBtn) openVipModalBtn.addEventListener('click', (e) => { e.preventDefault(); closeAllModals(); openModal('vip-packages-modal'); });
-    if (openBindAccountsModalBtn) openBindAccountsModalBtn.addEventListener('click', (e) => { e.preventDefault(); closeAllModals(); openModal('bind-accounts-modal'); });
-
-    // Attach event listeners to close buttons
-    closeButtons.forEach(button => {
-        button.addEventListener('click', closeAllModals);
+    _0x8f3e && _0x8f3e.addEventListener('click', (_0x0c2d) => {
+        _0x0c2d.preventDefault();
+        _0x3e4f();
+        _0x2c3d('login-modal');
     });
-
-    // Close modal when clicking outside of modal content
-    modals.forEach(modal => {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeAllModals();
-            }
-        });
+    _0x9a7b && _0x9a7b.addEventListener('click', (_0x0c2d) => {
+        _0x0c2d.preventDefault();
+        _0x3e4f();
+        _0x2c3d('bind-accounts-modal');
     });
+    _0x0b9c['forEach']((_0x7d1a) => _0x7d1a.addEventListener('click', _0x3e4f));
+    _0x1d2c['forEach']((_0x7d1a) => _0x7d1a.addEventListener('click', (_0x0c2d) => (_0x0c2d.target === _0x7d1a) && _0x3e4f()));
 
-    // --- Login Modal Form Validation & Submission ---
-    const loginForm = document.getElementById('login-form');
-    const usernameInput = document.getElementById('username');
-    const passwordInput = document.getElementById('password');
-    const usernameError = document.getElementById('username-error');
-    const passwordError = document.getElementById('password-error');
-    const loginMessage = document.getElementById('login-message');
+    const _0x5a6b = document['get' + 'ElementById'](['login', '-form'].join(''));
+    if (_0x5a6b) {
+        const _0x7b8c = document['get' + 'ElementById']('username');
+        const _0x9d0e = document['get' + 'ElementById']('password');
+        const _0x0f1a = document['get' + 'ElementById'](['username', '-error'].join(''));
+        const _0x1b2c = document['get' + 'ElementById'](['password', '-error'].join(''));
+        const _0x2d3e = document['get' + 'ElementById'](['login', '-message'].join(''));
 
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            let valid = true;
+        _0x5a6b.addEventListener('submit', async (_0x0c2d) => {
+            _0x0c2d.preventDefault();
+            let _0x3f4a = !![];
+            _0x0f1a.textContent = '', _0x1b2c.textContent = '', _0x2d3e.textContent = '';
+            _0x2d3e.classList.remove('success', 'error');
 
-            // Clear previous errors
-            usernameError.textContent = '';
-            passwordError.textContent = '';
-            loginMessage.textContent = '';
-            loginMessage.classList.remove('success', 'error');
-
-            if (usernameInput.value.trim() === '') {
-                usernameError.textContent = 'Tài khoản không được để trống.';
-                valid = false;
-            }
-
-            if (passwordInput.value.trim() === '') {
-                passwordError.textContent = 'Mật khẩu không được để trống.';
-                valid = false;
-            }
-
-            if (!valid) {
-                return;
-            }
-
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value.trim();
-            const rememberMe = document.getElementById('remember-me').checked;
+            const _0x4a5b = (_0x7d1a, _0x0a1b, _0x1c2d) => {
+                !_0x7d1a.value['trim']() && (_0x0a1b.textContent = _0x1c2d, _0x3f4a = ![]);
+            };
+            _0x4a5b(_0x7b8c, _0x0f1a, ['Tài khoản không', ' được để trống.'].join(''));
+            _0x4a5b(_0x9d0e, _0x1b2c, ['Mật khẩu không', ' được để trống.'].join(''));
+            if (!_0x3f4a) return;
 
             try {
-                // Simulate API call
-                const response = await fetch('/api/login', {
+                const _0x5c6d = await fetch('/api/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ username, password, rememberMe })
+                    body: JSON.stringify({
+                        username: _0x7b8c.value['trim'](),
+                        password: _0x9d0e.value['trim'](),
+                        rememberMe: document['get' + 'ElementById'](['remember', '-me'].join(''))['checked']
+                    })
                 });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    loginMessage.textContent = 'Đăng nhập thành công! Đang chuyển hướng...';
-                    loginMessage.classList.add('success');
-
-                    // ====================================================
-                    // === LOGIC CHUYỂN HƯỚNG TÙY VAI TRÒ (ĐÃ SỬA) ===
-                    // ====================================================
-
-                    // Sử dụng setTimeout để người dùng kịp thấy thông báo
+                const _0x6d7e = await _0x5c6d.json();
+                if (_0x6d7e.success) {
+                    _0x2d3e.textContent = ['Đăng nhập thành công!', ' Đang chuyển hướng...'].join('');
+                    _0x2d3e.classList.add('success');
                     setTimeout(() => {
-                        closeAllModals();
-
-                        if (data.role === 'admin') {
-                            // Chuyển hướng tới route Admin Dashboard
-                            window.location.href = "/admin-dashboard";
-                        } else {
-                            // Chuyển hướng tới route User Dashboard (hoặc trang chủ)
-                            window.location.href = "/user-dashboard";
-                        }
-                    }, 1500); // Đợi 1.5 giây
-
+                        _0x3e4f();
+                        window.location.href = (_0x6d7e.role === 'admin') ? '/admin-dashboard' : '/user-dashboard';
+                    }, (0x5DC | 0x0));
                 } else {
-                    loginMessage.textContent = `Đăng nhập thất bại: ${data.message || 'Sai tài khoản hoặc mật khẩu.'}`;
-                    loginMessage.classList.add('error');
+                    _0x2d3e.textContent = ['Đăng nhập thất bại: ', _0x6d7e.message || ['Sai tài khoản hoặc', ' mật khẩu.'].join('')].join('');
+                    _0x2d3e.classList.add('error');
                 }
-            } catch (error) {
-                console.error('Login error:', error);
-                loginMessage.textContent = 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại.';
-                loginMessage.classList.add('error');
+            } catch (_0x7e8f) {
+                _0x2d3e.textContent = ['Đã xảy ra lỗi hệ thống.', ' Vui lòng thử lại.'].join('');
+                _0x2d3e.classList.add('error');
+                console['error'](_0x7e8f);
             }
         });
     }
 
-    // --- VIP Packages & Payment Modals ---
-    const vipPackagesModal = document.getElementById('vip-packages-modal');
-    const paymentWarningModal = document.getElementById('payment-warning-modal');
-    const btnSelectPackage = vipPackagesModal.querySelectorAll('.btn-select');
-    const orderPackageName = document.getElementById('order-package-name');
-    const orderPackageDuration = document.getElementById('order-package-duration');
-    const orderOriginalPrice = document.getElementById('order-original-price');
-    const orderTotalPrice = document.getElementById('order-total-price');
-    const qrAmount = document.getElementById('qr-amount');
-    const bankTransferAmount = document.getElementById('bank-transfer-amount');
-    const transferContent = document.getElementById('transfer-content');
-
-    btnSelectPackage.forEach(button => {
-        button.addEventListener('click', (e) => {
-            const packageName = button.getAttribute('data-package-name');
-            const packageDuration = button.getAttribute('data-package-duration');
-            const packagePrice = button.getAttribute('data-package-price');
-            const buttonText = button.textContent.trim();
-
-            if (buttonText === 'Đang dùng' || buttonText === 'Liên hệ') {
-                alert(`Bạn đã chọn gói ${buttonText === 'Đang dùng' ? 'Cơ bản' : 'Doanh nghiệp'}. Vui lòng chọn gói khác hoặc liên hệ hỗ trợ.`);
-                return;
-            }
-
-            // Update payment summary
-            if (packageName && packageDuration && packagePrice) {
-                const priceFormatted = new Intl.NumberFormat('vi-VN').format(packagePrice) + ' đ';
-
-                orderPackageName.textContent = packageName;
-                orderPackageDuration.textContent = packageDuration;
-                orderOriginalPrice.textContent = priceFormatted;
-                orderTotalPrice.textContent = priceFormatted;
-                qrAmount.textContent = priceFormatted;
-                bankTransferAmount.textContent = priceFormatted;
-
-                // Simple transfer content generation
-                let content = 'VIP_';
-                if (packageName === 'Tiêu Chuẩn') content += '1M';
-                else if (packageName === 'Tập Vụ') content += '6M';
-                else content += 'X'; // Fallback
-
-                // Use a simplified username for transfer content placeholder
-                const usernameForTransfer = 'TANUYEN';
-                transferContent.textContent = `${usernameForTransfer}_${content}`;
-
-
-                closeAllModals();
-                openModal('payment-warning-modal');
+    document.querySelectorAll('.bind-card')['forEach']((_0x7e8f) => {
+        const _0x8f9a = _0x7e8f['querySelector']('.btn-primary');
+        const _0x9a0b = _0x7e8f['dataset'].platform;
+        if (!_0x8f9a) return;
+        _0x8f9a.addEventListener('click', async () => {
+            const _0x0b1c = _0x7e8f['querySelector'](['#', _0x9a0b['toLowerCase'](), '-id'].join(''));
+            const _0x1c2d_a = _0x0b1c?.value['trim']();
+            if (!_0x1c2d_a) return alert(['Vui lòng nhập ID cho ', _0x9a0b, '.'].join(''));
+            try {
+                const _0x2d3e_a = await fetch('/api/accounts/bind', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        platform: _0x9a0b,
+                        id: _0x1c2d_a
+                    })
+                });
+                const _0x3e4f_b = await _0x2d3e_a.json();
+                alert(_0x3e4f_b.success ? _0x3e4f_b.message || ['Liên kết ', _0x9a0b, ' thành công!'].join('') : ['Liên kết ', _0x9a0b, ' thất bại: ', _0x3e4f_b.message || 'Lỗi không xác định.'].join(''));
+            } catch (_0x4f5a) {
+                console['error'](_0x4f5a);
+                alert(['Đã xảy ra lỗi khi liên kết', ' tài khoản. Vui lòng thử lại.'].join(''));
             }
         });
     });
 
-    // Payment method selection logic
-    const paymentMethodCards = document.querySelectorAll('.payment-method-card');
-    const paymentDetailsSections = document.querySelectorAll('.payment-details-section');
-
-    paymentMethodCards.forEach(card => {
-        card.addEventListener('click', () => {
-            if (card.classList.contains('disabled')) return;
-
-            paymentMethodCards.forEach(c => c.classList.remove('active'));
-            card.classList.add('active');
-
-            const method = card.getAttribute('data-method');
-
-            paymentDetailsSections.forEach(section => section.classList.add('hidden'));
-
-            if (method === 'qr') {
-                document.getElementById('payment-details-qr').classList.remove('hidden');
-            } else if (method === 'bank-transfer') {
-                document.getElementById('payment-details-bank-transfer').classList.remove('hidden');
-            }
-        });
-    });
-
-    // Simulate discount application
-    const applyDiscountBtn = document.getElementById('apply-discount-btn');
-    const discountCodeInput = document.getElementById('discount-code-input');
-
-    if (applyDiscountBtn) {
-        applyDiscountBtn.addEventListener('click', () => {
-            const code = discountCodeInput.value.trim();
-            if (code) {
-                // Simulate discount logic
-                if (code === 'VIPGIFT') {
-                    alert('Áp dụng mã giảm giá thành công! Giảm 10%.');
-                    // In a real app, update order prices
-                } else {
-                    alert('Mã giảm giá không hợp lệ.');
-                }
-            } else {
-                alert('Vui lòng nhập mã giảm giá.');
-            }
-        });
-    }
-
-    // Simulate "Payment Complete" button
-    const paymentCompleteBtn = document.getElementById('payment-complete-btn');
-    if (paymentCompleteBtn) {
-        paymentCompleteBtn.addEventListener('click', () => {
-            alert('Thông báo: Yêu cầu thanh toán của bạn đã được ghi nhận. Hệ thống sẽ kiểm tra và kích hoạt gói VIP trong vòng 5-15 phút. Cảm ơn!');
-            closeAllModals();
-        });
-    }
-
-    // Simulate copy buttons in payment modal
-    const copyButtons = document.querySelectorAll('.bank-info-item .copy-btn');
-    copyButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const targetElement = e.currentTarget.previousElementSibling;
-            if (targetElement) {
-                const textToCopy = targetElement.textContent;
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    alert(`Đã sao chép: ${textToCopy}`);
-                }).catch(err => {
-                    console.error('Could not copy text: ', err);
-                    alert('Không thể sao chép tự động. Vui lòng sao chép thủ công.');
+    const _0x7c8d = () => {
+        fetch('/api/admin/users')['then']((_0x8d9e) => _0x8d9e.json())['then']((_0x9e0f) => {
+            if (!_0x9e0f.success) return;
+            const _0x0f1a_a = document['get' + 'ElementById']('user-list');
+            if (_0x0f1a_a) {
+                _0x0f1a_a.innerHTML = '';
+                _0x9e0f.users['forEach']((_0x1a2b_a) => {
+                    const _0x1c2d_b = document.createElement('tr');
+                    _0x1c2d_b.innerHTML = ['<td>', _0x1a2b_a.username, '</td><td>', _0x1a2b_a.password || '******', '</td><td>', _0x1a2b_a.role || 'user', '</td>'].join('');
+                    _0x0f1a_a.appendChild(_0x1c2d_b);
                 });
             }
-        });
+        })['catch']((_0x2b3c) => console['log'](['Không thể tải danh sách', ' người dùng admin:', _0x2b3c].join('')));
+    };
+
+    fetch('/api/me')['then']((_0x8d9e) => _0x8d9e.json())['then']((_0x3e4f_a) => {
+        const _0x4f5a = document['get' + 'ElementById']('open-login-modal-btn');
+        const _0x5a6b_a = document['get' + 'ElementById']('logout-link');
+        const _0x6b7c = document['get' + 'ElementById']('admin-panel');
+
+        _0x4f2d = _0x3e4f_a.logged_in;
+
+        (_0x4f2d ? _0x4f5a?.classList.add('hidden') : _0x4f5a?.classList.remove('hidden'));
+        (_0x4f2d ? _0x5a6b_a?.classList.remove('hidden') : _0x5a6b_a?.classList.add('hidden'));
+
+        _0x1b7e(_0x4f2d);
+
+        (_0x4f2d && _0x3e4f_a.role === 'admin') && (_0x6b7c && (_0x6b7c.style.display = 'block', _0x7c8d()));
+    })['catch']((_0x7c8d_a) => {
+        console['log'](['Không thể kiểm tra trạng thái', ' đăng nhập:', _0x7c8d_a].join(''));
+        _0x1b7e(![]);
     });
 
-    // --- Bind Accounts Modal Logic ---
-    const bindCards = document.querySelectorAll('.bind-card');
-    bindCards.forEach(card => {
-        const submitBtn = card.querySelector('.btn-primary');
-        const platform = card.getAttribute('data-platform');
+    const _0x2b3c = document.querySelectorAll('.category-tab');
+    const _0x3c4d = document.querySelectorAll('.subcategory-tab');
+    const _0x4d5e = Array['from'](document.querySelectorAll('.resources-grid .material-card'));
+    const _0x5e6f = document['querySelector']('#empty-message');
+    const _0x6f7a = document['get' + 'ElementById']('pagination');
 
-        if (submitBtn) {
-            submitBtn.addEventListener('click', async () => {
-                const idInput = card.querySelector(`#${platform.toLowerCase()}-id`);
-                const nicknameInput = card.querySelector(`#${platform.toLowerCase()}-nickname`);
+    let _0x7a8b = 'nhanvat';
+    let _0x8b9c = null;
+    let _0x9c0d = 0x1;
+    let _0x0d1e = [];
 
-                if (!idInput) {
-                    console.error(`ID input not found for platform: ${platform}`);
-                    return;
-                }
+    const _0x1e2f = () => {
+        _0x0d1e = _0x4d5e['filter']((_0x8d9e) => {
+            const _0x1a2b_b = _0x8d9e['getAttribute']('data-cat');
+            const _0x2b3c_a = _0x8d9e['getAttribute']('data-subcat') || '';
+            let _0x3c4d_a = ![];
 
-                const id = idInput.value.trim();
-                const nickname = nicknameInput ? nicknameInput.value.trim() : '';
+            if (_0x8b9c && _0x8b9c !== 'all') {
+                _0x2b3c_a['includes'](_0x8b9c) && (_0x3c4d_a = !![]);
+            } else if (_0x7a8b) {
+                ((_0x7a8b === 'all') || (_0x1a2b_b === _0x7a8b)) && (_0x3c4d_a = !![]);
+            }
+            return _0x3c4d_a;
+        });
 
-                if (!id) {
-                    alert(`Vui lòng nhập ID cho ${platform}.`);
-                    return;
-                }
+        _0x9c0d = 0x1;
+        _0x2f3a(_0x0d1e.length);
+        _0x3a4b(_0x9c0d);
+    };
 
-                try {
-                    // Simulate API call
-                    const response = await fetch('/api/accounts/bind', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ platform, id, nickname })
+    const _0x4b5c = (_0x0b1c_a, _0x1c2d_a, _0x2d3e_b, _0x3e4f_b = ![]) => {
+        const _0x4f5a_a = document.createElement('button');
+        _0x4f5a_a.textContent = _0x0b1c_a;
+        _0x4f5a_a.classList.add('px-3', 'py-1', 'rounded-lg', 'font-medium', 'transition-colors');
+
+        _0x2d3e_b ? (
+            _0x4f5a_a.disabled = !![],
+                _0x4f5a_a.classList.add('bg-gray-200', 'text-gray-500', 'dark:bg-gray-700', 'dark:text-gray-400', 'cursor-not-allowed')
+        ) : _0x3e4f_b ? (
+            _0x4f5a_a.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700')
+        ) : (
+            _0x4f5a_a.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200', 'dark:bg-gray-800', 'dark:text-gray-300', 'dark:hover:bg-gray-700'),
+                _0x4f5a_a.addEventListener('click', () => {
+                    _0x9c0d = _0x1c2d_a;
+                    _0x3a4b(_0x9c0d);
+                    _0x2f3a(_0x0d1e.length);
+                    window['scrollTo']({
+                        top: 0x0,
+                        behavior: 'smooth'
                     });
-                    const data = await response.json();
-                    if (data.success) {
-                        alert(data.message || `Liên kết ${platform} thành công!`);
-                        // Optionally update UI to show it's bound
-                    } else {
-                        alert(`Liên kết ${platform} thất bại: ${data.message || 'Lỗi không xác định.'}`);
-                    }
-                } catch (error) {
-                    console.error(`Error binding ${platform} account:`, error);
-                    alert('Đã xảy ra lỗi khi liên kết tài khoản. Vui lòng thử lại.');
-                }
-            });
+                })
+        );
+        return _0x4f5a_a;
+    };
+
+    const _0x2f3a = (_0x5c6d_a) => {
+        if (!_0x6f7a) return;
+        _0x6f7a.innerHTML = '';
+        const _0x6d7e_a = Math['ceil'](_0x5c6d_a / _0x2e8b);
+
+        if (_0x6d7e_a <= 0x1) {
+            _0x6f7a.style.display = 'none';
+            return;
         }
+
+        _0x6f7a.style.display = 'flex';
+
+        const _0x7e8f_a = _0x4b5c('Trước', _0x9c0d - 0x1, _0x9c0d === 0x1);
+        _0x6f7a.appendChild(_0x7e8f_a);
+
+        for (let _0x8f9a_a = 0x1; _0x8f9a_a <= _0x6d7e_a; _0x8f9a_a++) {
+            const _0x9a0b_a = _0x4b5c(_0x8f9a_a, _0x8f9a_a, ![], _0x8f9a_a === _0x9c0d);
+            _0x6f7a.appendChild(_0x9a0b_a);
+        }
+
+        const _0x0b1c_b = _0x4b5c('Sau', _0x9c0d + 0x1, _0x9c0d === _0x6d7e_a);
+        _0x6f7a.appendChild(_0x0b1c_b);
+    };
+
+    const _0x3a4b = (_0x1c2d_c) => {
+        const _0x5a6b_b = (_0x1c2d_c - 0x1) * _0x2e8b;
+        const _0x6b7c_a = _0x5a6b_b + _0x2e8b;
+        let _0x7c8d_a = ![];
+
+        _0x4d5e['forEach']((_0x8d9e_a, _0x9e0f_a) => {
+            const _0x0f1a_b = _0x0d1e['includes'](_0x8d9e_a);
+            (_0x0f1a_b && _0x9e0f_a >= _0x5a6b_b && _0x9e0f_a < _0x6b7c_a) ? (
+                _0x8d9e_a.style.display = 'flex', _0x7c8d_a = !![]
+            ) : (_0x8d9e_a.style.display = 'none');
+        });
+
+        _0x5e6f && (_0x5e6f.style.display = _0x7c8d_a ? 'none' : 'flex');
+    };
+
+    _0x2b3c['forEach']((_0x4d5e_a) => {
+        _0x4d5e_a.addEventListener('click', () => {
+            _0x2b3c['forEach']((_0x5e6f_a) => _0x5e6f_a.classList.remove('active'));
+            _0x4d5e_a.classList.add('active');
+
+            _0x7a8b = _0x4d5e_a['dataset'].cat;
+            _0x8b9c = null;
+
+            _0x3c4d['forEach']((_0x5e6f_a) => _0x5e6f_a.classList.remove('active'));
+
+            _0x1e2f();
+        });
     });
 
-    // Handle "back" button in payment warning modal
-    const paymentWarningBackBtn = paymentWarningModal.querySelector('.back-btn');
-    if (paymentWarningBackBtn) {
-        paymentWarningBackBtn.addEventListener('click', () => {
-            closeAllModals();
-            openModal('vip-packages-modal'); // Go back to VIP package selection
+    _0x3c4d['forEach']((_0x4d5e_a) => {
+        _0x4d5e_a.addEventListener('click', () => {
+            _0x3c4d['forEach']((_0x5e6f_a) => _0x5e6f_a.classList.remove('active'));
+            _0x4d5e_a.classList.add('active');
+
+            _0x8b9c = _0x4d5e_a['dataset'].subcat;
+
+            _0x1e2f();
         });
-    }
+    });
 
-    // ====================================================
-    // NOTE: HÀM NÀY ĐANG CHẠY LẠI LOGIC antiDevTools
-    // HÃY ĐẢM BẢO CHỈ CÓ MỘT LẦN CHẠY antiDevToolsLight()
-    // ====================================================
-    // ===== LOGIC HIỂN THỊ MENU ĐĂNG NHẬP/ĐĂNG XUẤT =====
-    fetch('/api/me')
-        .then(r => r.json())
-        .then(me => {
-
-            const loginLink = document.getElementById('open-login-modal-btn');
-            const logoutLink = document.getElementById('logout-link');
-            const adminPanel = document.getElementById('admin-panel');
-
-            if (me.logged_in) {
-
-                if (loginLink) loginLink.classList.add('hidden');
-                if (logoutLink) logoutLink.classList.remove('hidden');
-            } else {
-
-                if (loginLink) loginLink.classList.remove('hidden');
-                if (logoutLink) logoutLink.classList.add('hidden');
-            }
-
-            if (me.role !== 'admin') {
-            }
-
-            if (me.logged_in && me.role === 'admin') {
-                if (adminPanel) {
-                    adminPanel.style.display = 'block';
-                    loadUsers();
-                }
-            }
-        });
-
-// Lưu ý: Bạn cần đảm bảo đã thêm ID cho link Đăng xuất:
-// <a href="/logout" class="dropdown-item hidden..." id="logout-link">...</a>
-
-    function enableAntiDevTools() {
-
-        setTimeout(() => {
-
-            function stopSite() {
-                document.body.innerHTML = `
-            <div style="
-                display:flex;
-                justify-content:center;
-                align-items:center;
-                height:100vh;
-                background:#0b0b0b;
-                color:#ff4444;
-                font-size:22px;
-                font-weight:600;
-                text-align:center;
-            ">
-                ⚠️ Truy cập bị hạn chế<br>
-                Vui lòng đóng DevTools
-            </div>`;
-            }
-
-            document.addEventListener('contextmenu', e => e.preventDefault());
-
-            document.addEventListener('keydown', e => {
-                if (
-                    e.key === 'F12' ||
-                    (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(e.key.toLowerCase())) ||
-                    (e.ctrlKey && e.key.toLowerCase() === 'u')
-                ) {
-                    e.preventDefault();
-                    stopSite();
-                }
-            });
-
-            setInterval(() => {
-                const w = window.outerWidth - window.innerWidth;
-                const h = window.outerHeight - window.innerHeight;
-                if (w > 180 || h > 180) stopSite();
-            }, 3000);
-
-        }, 3000);
-    }
-
-// ===== LOAD USERS =====
-    function loadUsers() {
-        fetch('/api/admin/users')
-            .then(res => res.json())
-            .then(data => {
-                if (!data.success) return;
-
-                const tbody = document.getElementById('user-list');
-                tbody.innerHTML = '';
-
-                data.users.forEach(u => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                    <td>${u.username}</td>
-                    <td>${u.password || '******'}</td>
-                    <td>${u.role || 'user'}</td>
-                `;
-                    tbody.appendChild(tr);
-                });
-            });
-    }
-    // Gỡ bỏ đoạn fetch role lặp lại ở cuối DOMContentLoaded
-    // fetch('/api/me')
-    //     .then(res => res.json())
-    //     .then(data => {
-    //         if (data.logged_in && data.role === 'admin') {
-    //             document.getElementById('admin-panel').style.display = 'block';
-    //             loadUsers();
-    //         }
-    //     });
-
-
-});
-
+    document['querySelector'](['.category-tab[data-cat="', 'nhanvat"]'].join(''))?.classList.add('active');
+    _0x1e2f();
+})());
