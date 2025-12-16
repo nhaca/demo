@@ -948,3 +948,78 @@ body.dark .register-new-platform-card tbody tr:nth-child(even) {
     border: 1px dashed var(--border-color);
     border-radius: 0.75rem;
 }
+/* Thiết lập lớp phủ loading */
+.loading-overlay {
+    position: absolute; /* Quan trọng: Đảm bảo nó che phủ iframe */
+    top: 90px; /* Điều chỉnh dựa trên chiều cao của nút "Đóng Công cụ" */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10; /* Cao hơn iframe */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.9); /* Nền sáng */
+    /* Tối ưu hóa cho chế độ tối */
+    background-color: var(--bg-color-primary, #ffffff); /* Dùng biến CSS của Tailwind */
+    color: var(--text-color-primary, #1f2937);
+    border-radius: 8px;
+    height: 80%; /* Chiều cao bằng với iframe */
+}
+
+/* Thiết lập biểu tượng spinner */
+.spinner-icon {
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #3b82f6; /* Blue */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite; /* Tạo hiệu ứng xoay */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Thêm tùy chỉnh cho chế độ tối (nếu cần) */
+.dark .loading-overlay {
+    background-color: var(--bg-color-dark, #1f2937);
+    color: var(--text-color-dark, #f3f4f6);
+}
+/* Tùy chỉnh cho Nút Đóng Công cụ (#close-embed-btn) */
+#close-embed-btn {
+    /* Đảm bảo nút được hiển thị rõ ràng */
+    padding: 8px 16px;
+    border-radius: 9999px; /* Biến thành hình viên thuốc */
+    font-weight: 600; /* Semi-bold */
+    transition: all 0.2s ease-in-out;
+
+    /* Thiết lập màu nền ban đầu (màu đỏ - danger) */
+    background-color: #ef4444; /* red-500 */
+    color: #ffffff;
+    border: 1px solid #dc2626; /* red-600 */
+}
+
+/* Hiệu ứng khi di chuột qua (hover) */
+#close-embed-btn:hover {
+    background-color: #dc2626; /* red-600 */
+    transform: translateY(-1px); /* Nâng nhẹ nút lên */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Thêm bóng */
+}
+
+/* Tối ưu hóa cho chế độ tối (dark mode) */
+html.dark #close-embed-btn {
+    background-color: #b91c1c; /* red-700 tối */
+    border-color: #991b1b; /* red-800 tối */
+}
+
+html.dark #close-embed-btn:hover {
+    background-color: #7f1d1d; /* red-800 tối hơn */
+    border-color: #7f1d1d;
+}
+
+/* Đảm bảo icon có khoảng cách với chữ */
+#close-embed-btn i {
+    margin-right: 8px;
+}
