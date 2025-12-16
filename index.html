@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress ALL -->
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
@@ -10,15 +11,6 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-SKHQ51XL1E"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-SKHQ51XL1E');
-</script>
 <body class="simple">
 <div id="root" class="min-h-screen flex flex-col bg-white dark:bg-gray-900">
     <header class="bg-white dark:bg-gray-900 sticky top-0 z-50 border-b border-gray-100 dark:border-gray-800 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
@@ -29,7 +21,9 @@
                 </div>
                 <div class="flex-1 flex justify-center px-6">
                     <div class="relative w-full max-w-[520px]">
-                        <input type="text" placeholder="Tìm kiếm tài liệu, bản quyền, nhãn..." class="border border-gray-300 dark:border-gray-700 rounded-full px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500">
+                        <label>
+                            <input type="text" placeholder="Tìm kiếm tài liệu, bản quyền, nhãn..." class="border border-gray-300 dark:border-gray-700 rounded-full px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500">
+                        </label>
                         <div class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 cursor-pointer hover:text-blue-500">
                             <i class="fas fa-search"></i>
                         </div>
@@ -53,9 +47,10 @@
                         </button>
                         <div class="dropdown-menu">
                             <a href="#" class="dropdown-item" id="open-login-modal-btn">Đăng nhập</a>
-                            <a href="#" class="dropdown-item" id="open-vip-modal-btn">Nâng cấp VIP</a>
                             <a href="#" class="dropdown-item" id="open-bind-accounts-modal-btn">Liên kết tài khoản</a>
                             <a href="#" class="dropdown-item">Hồ sơ</a>
+                            <a href="#" class="dropdown-item hidden" id="logout-link">Đăng xuất</a>
+                            <a href="/admin-dashboard" class="dropdown-item hidden" id="admin-panel" style="display: none;">Admin Panel</a>
                         </div>
                     </div>
                     <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-300 dark:border-gray-600" aria-label="Chuyển sang chế độ sáng">
@@ -94,31 +89,26 @@
             <div class="relative group category-nav-wrapper">
                 <button class="nav-scroll-btn left-0" aria-label="Scroll left"><i class="fas fa-chevron-left"></i></button>
                 <div class="flex items-center gap-3 overflow-x-auto py-4 hide-scrollbar" id="category-tabs">
-                    <button class="category-tab active">Nhân vật</button>
-                    <button class="category-tab">Cảnh</button>
-                    <button class="category-tab">Đạo cụ</button>
-                    <button class="category-tab">Hiệu ứng đặc biệt</button>
-                    <button class="category-tab">Biểu cảm</button>
-                    <button class="category-tab">Cao cấp</button>
-                    <button class="category-tab">Video</button>
-                    <button class="category-tab">Phần mềm</button>
-                    <button class="category-tab">Âm thanh</button>
-                    <button class="category-tab">Hướng dẫn</button>
-                    <button class="category-tab">Sinh vật</button>
-                    <button class="category-tab">Dịch vụ thiết kế</button>
-                    <button class="category-tab">Tài nguyên ngoài</button>
-                    <button class="category-tab">hoạt hình VN</button>
-                    <button class="category-tab">Yêu thích</button>
-                    <button class="category-tab">Gói vật liệu</button>
+                    <button class="category-tab active" data-cat="nhanvat">Nhân vật</button>
+                    <button class="category-tab" data-cat="canh">Cảnh</button>
+                    <button class="category-tab" data-cat="daocu">Đạo cụ</button>
+                    <button class="category-tab" data-cat="hieuungdacbiet">Hiệu ứng đặc biệt</button>
+                    <button class="category-tab" data-cat="bieucam">Biểu cảm</button>
+                    <button class="category-tab" data-cat="caocap">Cao cấp</button>
+                    <button class="category-tab" data-cat="video">Video</button>
+                    <button class="category-tab" data-cat="phanmem">Phần mềm</button>
+                    <button class="category-tab" data-cat="amthanh">Âm thanh</button>
+                    <button class="category-tab" data-cat="huongdan">Hướng dẫn</button>
+                    <button class="category-tab" data-cat="sinhvat">Sinh vật</button>
                 </div>
                 <button class="nav-scroll-btn right-0" aria-label="Scroll right"><i class="fas fa-chevron-right"></i></button>
             </div>
             <div class="flex items-center gap-3 overflow-x-auto py-4 hide-scrollbar" id="subcategory-tabs">
-                <button class="subcategory-tab active">Tất cả</button>
-                <button class="subcategory-tab">Nhân vật nữ</button>
-                <button class="subcategory-tab">Nhân vật nam</button>
-                <button class="subcategory-tab">Đa hành động</button>
-                <button class="subcategory-tab">Khác</button>
+                <button class="subcategory-tab active" data-subcat="tutien">Tu tiên</button>
+                <button class="subcategory-tab" data-subcat="kinhdi">Kinh Dị</button>
+                <button class="subcategory-tab" data-subcat="hiendai">Hiện Đại</button>
+                <button class="subcategory-tab" data-subcat="codai">Cổ đại</button>
+                <button class="subcategory-tab" data-subcat="khac">Khác</button>
             </div>
         </div>
     </div>
@@ -129,529 +119,962 @@
                 <h1 class="text-xl font-bold text-gray-800 dark:text-gray-100">Tài nguyên mới nhất ( •̀ ω •́ )✧</h1>
                 <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                     <span>Sắp xếp theo:</span>
-                    <select class="border border-gray-300 dark:border-gray-700 rounded-lg px-2 py-1 bg-white dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                        <option>Mới nhất</option>
-                        <option>Phổ biến</option>
-                        <option>Tải xuống nhiều nhất</option>
-                    </select>
+                    <label>
+                        <select class="border border-gray-300 dark:border-gray-700 rounded-lg px-2 py-1 bg-white dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <option>Mới nhất</option>
+                            <option>Phổ biến</option>
+                            <option>Tải xuống nhiều nhất</option>
+                        </select>
+                    </label>
                 </div>
             </div>
+            <div id="empty-message" class="empty-message">
+                Tài nguyên đang cập nhật
+            </div>
 
-            <div class="grid">
-                <div class="material-card">
+            <div class="resources-grid">
+
+                <div class="material-card" data-cat="phanmem" data-subcat="">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E9%81%93%E5%85%B7%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%85%B6%E4%BB%96dc2f3a06878a44919b05144fcbabdaba.png" alt="Material 1" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản Quyền</button>
+                        <span class="badge-copyright">Miễn Phí</span>
+                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/adobe-animate-logo.png" alt="Adobe Animate" class="material-image">
+                    </div>
+                    <p class="material-title">Adobe Animate</p>
+                    <p class="material-subtitle">.fla</p>
+                    <a href="https://drive.usercontent.google.com/download?id=1kWeRSJK8eOo_Vx9mKXNUJdcqPYcGQQe8&export=download&authuser=0" class="download-btn" download>
+                        <button class="material-button">Tải xuống</button>
+                    </a>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="hiendai kinhdi">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
+
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/TNB.png"
+                                alt="TNB"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Tiêu Nhất Bạch</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="hiendai kinhdi khac">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/nv%20n%E1%BB%AF.png"
+                                alt="Goinvnu"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Gói nhân vât nữ</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/H%E1%BA%AFc%20B%C3%A0o%20Nh%C3%A2n.png"
+                                alt="Hacbaonhan"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Hắc Bào Nhân</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7ae5a860fbeaf45eebdd0bee6f6848dc4.png"
+                                alt="Thanhbao"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Thanh Bào</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7b5a1f83d31a94e978f292399569fb652.png"
+                                alt="Nhatthanh"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Nhật Thánh</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7b454f5821269497d9135bc74f71618bb.png"
+                                alt="Thanhchu"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Thánh chủ</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7b5844411808a4f6d82e3373b6d2f7717.png"
+                                alt="Thanhde"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Thánh Đế</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien khac">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7b4461617189345eb8b837d3614bb77e5.png"
+                                alt="Daibang"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Đại Bàng</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien khac">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7bcfd025584aa442dbe724346a993d139.png"
+                                alt="Bộ xương quấn vải"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Bộ xương quấn vải</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7ca756abdd50c4b929d6429bf5503ea95.png"
+                                alt="Lão ăn mày"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Lão ăn mày</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7ceb39e51fd6e4f46a31da5b3677e3ae3.png"
+                                alt="Tông chủ"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Tông chủ</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7d3e1bb84b98a4b559d650c357fad9584.png"
+                                alt="Phụng Hoàng Ưng"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Phụng Hoàng Ưng</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B79482a0dc985a4180a38e35ec200666ad.png"
+                                alt="Chư Thiên Chi Chủ"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Chư Thiên Chi Chủ</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B77903f2d93d6d49199af4c23d83496d41.png"
+                                alt="Hắc Ám Ma Quân"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Hắc Ám Ma Quân</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B76766d1a2cd9845d7a70a0fb3a1ac6cfc.png"
+                                alt="Đại ca béo(Bị thương)"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Đại ca béo(Bị thương)</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="sinhvat" data-subcat="">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B76086abdd645d4c26a118b6b6cc57f3d1.png"
+                                alt="Đại Điểu"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Đại Điểu</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B72729d874dd334c948ec961d91853b66b.png"
+                                alt="Dạ Vương"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Dạ Vương</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7864d0a2ea36540829340a62a70304e3e.png"
+                                alt="Minh Lãnh"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Minh Lãnh</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7651e5398bb8a4395a531c8a54fce01b3.png"
+                                alt="Thần Vũ Hắc Kỳ"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Thần Vũ Hắc Kỳ</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7935d93fc0a954abcb406aec0178f4077.png"
+                                alt="Thanh Giang Kiếm Khách"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Thanh Giang Kiếm Khách</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7463e36336e8d4f328b8c3a62ef106700.png"
+                                alt="Bạch Dạ Lãnh Chủ"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Bạch Dạ Lãnh Chủ</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B793d48974337649e398ee3cb11ffae8a0.png"
+                                alt="Bạch Hồn U Tôn"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Bạch Hồn U Tôn</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B762bd9920ca804d24902ec41b7116f70a.png"
+                                alt="Nguyên Thuỷ Nhân"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Nguyên Thuỷ Nhân</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B75f0a58a8fbd94647b5689027cd1bf819.png"
+                                alt="Huyết Sát Ma Thần"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Huyết Sát Ma Thần</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/V%E1%BA%ADn%20M%E1%BB%87nh%20H%C6%B0%20V%C3%B4%20Th%E1%BB%83.png"
+                                alt="Vận Mệnh Hư Vô Thể"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Vận Mệnh Hư Vô Thể</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien khac">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B77dcb9bc35671474eb42e7e36a7e33a23.png"
+                                alt="Lam Hải Kiếm Khách - Huyết Dạ Minh Vương"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Lam Hải Kiếm Khách - Huyết Dạ Minh Vương</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat sinhvat" data-subcat="tutien khac">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B77c7cc2d0b7cf4bb786ec1ccf22bfb800.png"
+                                alt="Dực Thiên Chí Tôn"
+                                class="material-image">
+                    </div>
+                    <p class="material-title">Dực Thiên Chí Tôn</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E9%81%93%E5%85%B7%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%85%B6%E4%BB%96dc2f3a06878a44919b05144fcbabdaba.png"
+                                alt="Bovang"
+                                class="material-image">
                     </div>
                     <p class="material-title">Bò vàng</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
-                <div class="material-card">
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E9%81%93%E5%85%B7%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%85%B6%E4%BB%9657db5b34ca6349db9f52a5e21fa1231e.png" alt="Material 2" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E9%81%93%E5%85%B7%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%85%B6%E4%BB%9657db5b34ca6349db9f52a5e21fa1231e.png"
+                                alt="tuluyen"
+                                class="material-image">
                     </div>
                     <p class="material-title">Tu luyện giả tưởng</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
-                <div class="material-card">
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7fb0ea352aed5461995533fafab78648a.png" alt="Material 3" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7fb0ea352aed5461995533fafab78648a.png"
+                                alt="Mahoa"
+                                class="material-image">
                     </div>
                     <p class="material-title">Ma hóa</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
-                <div class="material-card">
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7f098f03f273a4b2f87ddd38106d4a716.png" alt="Material 4" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7f098f03f273a4b2f87ddd38106d4a716.png"
+                                alt="nvnamtt"
+                                class="material-image">
                     </div>
                     <p class="material-title">Nhân vật nam tu tiên</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
-                <div class="material-card">
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7f02bd8b07c464e248368ec4ae9363466.png" alt="Material 5" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7f02bd8b07c464e248368ec4ae9363466.png"
+                                alt="Daicabeo"
+                                class="material-image">
                     </div>
-                    <p class="material-title"></p>Đại ca béo</p>
+                    <p class="material-title">Đại ca béo</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
-                <div class="material-card">
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7ede5ad45ad6f4ff4b0822b69be9524ae.png" alt="Material 6" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7ede5ad45ad6f4ff4b0822b69be9524ae.png"
+                                alt="Daicothu"
+                                class="material-image">
                     </div>
                     <p class="material-title">Nhân vật đại cổ thụ</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
-                <div class="material-card">
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7eaa2223aad704fa7a78f041c808fec02.png" alt="Material 7" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7eaa2223aad704fa7a78f041c808fec02.png"
+                                alt="Hacviem"
+                                class="material-image">
                     </div>
                     <p class="material-title">Hắc viêm</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
-                <div class="material-card">
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7e17031dbee0149569fbea0a2f9642607.png" alt="Material 8" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7e17031dbee0149569fbea0a2f9642607.png"
+                                alt="Satthu"
+                                class="material-image">
                     </div>
                     <p class="material-title">Sát thủ hắc quan</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
-                <div class="material-card">
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7e7444dc516014ba49ff6530743456939.png" alt="Material 8" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7e7444dc516014ba49ff6530743456939.png"
+                                alt="Caubetuluyen"
+                                class="material-image">
                     </div>
                     <p class="material-title">Cậu bé tu luyện</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
-                <div class="material-card">
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B749026b90b0334591a65cee21d4481159.png" alt="Material 8" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B749026b90b0334591a65cee21d4481159.png"
+                                alt="Phunhan"
+                                class="material-image">
                     </div>
                     <p class="material-title">Phu Nhân Vương Phủ</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
-                <div class="material-card">
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B79699f252bb27478fa8465c0d4c140858.png" alt="Material 8" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B79699f252bb27478fa8465c0d4c140858.png"
+                                alt="Thanhnhan"
+                                class="material-image">
                     </div>
                     <p class="material-title">Thánh Nhân</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
-                <div class="material-card">
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7d458875b4a7241028550239d14b4493f.png" alt="Material 8" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
+                        <img
+                                src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7d458875b4a7241028550239d14b4493f.png"
+                                alt="Made"
+                                class="material-image">
                     </div>
                     <p class="material-title">Ma đế(1)</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
-                <div class="material-card">
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7de06ce5f544245fb90120d2480d722e5.png" alt="Material 8" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
+                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7de06ce5f544245fb90120d2480d722e5.png" alt="Nhân vật opera" class="material-image">
                     </div>
                     <p class="material-title">Nhân vật opera</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
-                <div class="material-card">
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7e3ff6635a1024c70be58a20f748a07ed.png" alt="Material 8" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
+                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7e3ff6635a1024c70be58a20f748a07ed.png" alt="Thanhlambao" class="material-image">
                     </div>
-                    <p class="material-title">Nam tu luyện(1)</p>
+                    <p class="material-title">Thanh Lam bào</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
-                <div class="material-card">
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
                     <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B73055638360b2474291425e956e308db2.png" alt="Material 8" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
                         </div>
-                    </div>
-                    <p class="material-title">Sát thủ mặt nạ</p>
-                    <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
-                </div>
-                <div class="material-card">
-                    <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B783062502686b43a5a956130bf7b9f9e0.png" alt="Material 8" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
-                        </div>
-                    </div>
-                    <p class="material-title">Nhân vật opera</p>
-                    <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
-                </div>
-                <div class="material-card">
-                    <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7a8d6ec6a50c843feb34282346ad7f061.png" alt="Material 8" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
-                        </div>
-                    </div>
-                    <p class="material-title">Nam tu luyện(1)</p>
-                    <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
-                </div>
-                <div class="material-card">
-                    <div class="material-image-wrapper">
-                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7a4787dcd12484d4d807e84f4bab14588.png" alt="Material 8" class="material-image">
-                        <div class="material-overlay">
-                            <button class="material-button buy-rights">Bản quyền</button>
-                        </div>
+                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B73055638360b2474291425e956e308db2.png" alt="Sát thủ mặt nạ" class="material-image">
                     </div>
                     <p class="material-title">Sát thủ mặt nạ</p>
                     <p class="material-subtitle">.fla</p>
-                    <p class="material-subtitle">10,000 VNĐ</p>
+                    <p class="material-subtitle">VIP</p>
                 </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B783062502686b43a5a956130bf7b9f9e0.png" alt="Sát thủ mặt nạ(1)" class="material-image">
+                    </div>
+                    <p class="material-title">Sát thủ mặt nạ(1)</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7a8d6ec6a50c843feb34282346ad7f061.png" alt="Linh hồn tu luyện" class="material-image">
+                    </div>
+                    <p class="material-title">Linh hồn tu luyện</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+                <div class="material-card" data-cat="nhanvat" data-subcat="tutien">
+                    <div class="material-image-wrapper">
+                        <span class="badge-copyright">Bản quyền</span>
+                        <div class="unauthorized-overlay hidden" id="unauth-overlay-X" data-id="X">
+                            <button class="btn btn-primary" onclick="handleUnauthorizedClick(event)">
+                                <i class="fas fa-lock mr-2"></i> Đăng nhập để xem
+                            </button>
+                        </div>
+                        <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/%E4%BA%BA%E7%89%A9%E5%9B%BE-%E7%8E%84%E5%B9%BB%E4%BF%AE%E4%BB%99-%E5%A4%9A%E5%8A%A8%E4%BD%9C-%E7%94%B7a4787dcd12484d4d807e84f4bab14588.png" alt="Hắc sát" class="material-image">
+                    </div>
+                    <p class="material-title">Hắc sát</p>
+                    <p class="material-subtitle">.fla</p>
+                    <p class="material-subtitle">VIP</p>
+                </div>
+
+            </div>
+
+            <div id="pagination" class="flex justify-center items-center space-x-2 mt-8">
             </div>
         </main>
     </div>
 
-    <div id="modals-container">
-        <div id="login-modal" class="modal-overlay hidden">
+    <div id="modals-logout">
+        <div id="logout-modal" class="modal-overlay hidden">
             <div class="modal-content">
                 <button class="modal-close-btn"><i class="fas fa-times"></i></button>
-                <h2 class="modal-title">Đăng nhập</h2>
-                <form id="login-form" class="modal-form">
-                    <div class="form-group">
-                        <label for="username" class="sr-only">Tài khoản</label>
-                        <div class="input-icon-wrapper">
-                            <i class="fas fa-user icon"></i>
-                            <input type="text" id="username" placeholder="Tài khoản" class="input-field pl-10" required>
-                        </div>
-                        <p id="username-error" class="error-message"></p>
-                    </div>
-                    <div class="form-group">
-                        <label for="password" class="sr-only">Mật khẩu</label>
-                        <div class="input-icon-wrapper">
-                            <i class="fas fa-lock icon"></i>
-                            <input type="password" id="password" placeholder="Mật khẩu" class="input-field pl-10" required>
-                        </div>
-                        <p id="password-error" class="error-message"></p>
-                    </div>
-                    <div class="flex items-center justify-between mb-4 text-sm">
-                        <div class="flex items-center">
-                            <input type="checkbox" id="remember-me" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mr-2">
-                            <label for="remember-me" class="text-gray-600 dark:text-gray-300">Nhớ tôi</label>
-                        </div>
-                        <a href="#" class="text-blue-600 hover:text-blue-500 transition-colors">Quên mật khẩu?</a>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-full">Đăng nhập</button>
-                    <p id="login-message" class="form-message"></p>
-                    </p>
+                <h2 class="modal-title">Xác nhận đăng xuất?</h2>
+                <button type="submit" class="btn btn-primary w-full">Đăng xuất</button>
+                <p id="logout-message" class="form-message"></p>
                 </form>
             </div>
         </div>
 
-        <div id="vip-packages-modal" class="modal-overlay hidden">
-            <div class="modal-content ultra-large-modal">
-                <button class="modal-close-btn"><i class="fas fa-times"></i></button>
-                <h2 class="modal-title">Nâng cấp thành viên VIP</h2>
-                <p class="text-center text-gray-600 dark:text-gray-400 mb-8">Chọn gói dịch vụ phù hợp với nhu cầu của bạn</p>
-
-                <div class="vip-packages-grid">
-                    <div class="vip-package-card free">
-                        <div>
-                            <h3 class="package-title text-gray-700 dark:text-gray-300">Thành viên Cơ bản</h3>
-                            <p class="package-price">0 đ<span class="package-duration">/vĩnh viễn</span></p>
-                            <p class="text-sm text-gray-500 dark:text-gray-500 mb-4">Mở khóa nội dung miễn phí</p>
-                            <ul class="package-features">
-                                <li><i class="fas fa-check-circle"></i>Truy cập tài nguyên miễn phí</li>
-                                <li><i class="fas fa-check-circle"></i>Hạn chế tải xuống (5/ngày)</li>
-                                <li><i class="fas fa-times-circle text-gray-400"></i>Truy cập tài nguyên VIP</li>
-                                <li><i class="fas fa-times-circle text-gray-400"></i>Hỗ trợ ưu tiên</li>
-                            </ul>
+        <div id="modals-container">
+            <div id="login-modal" class="modal-overlay hidden">
+                <div class="modal-content">
+                    <button class="modal-close-btn"><i class="fas fa-times"></i></button>
+                    <h2 class="modal-title">Đăng nhập</h2>
+                    <form id="login-form" class="modal-form">
+                        <div class="form-group">
+                            <label for="username" class="sr-only">Tài khoản</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fas fa-user icon"></i>
+                                <input type="text" id="username" placeholder="Tài khoản" class="input-field pl-10" required>
+                            </div>
+                            <p id="username-error" class="error-message"></p>
                         </div>
-                        <button class="btn-select">Đang dùng</button>
-                    </div>
-
-                    <div class="vip-package-card">
-                        <div>
-                            <h3 class="package-title text-blue-600">Gói Tiêu Chuẩn</h3>
-                            <p class="package-price">99.000 đ<span class="package-duration">/tháng</span></p>
-                            <p class="text-sm text-gray-500 dark:text-gray-500 mb-4">Tải xuống không giới hạn</p>
-                            <ul class="package-features">
-                                <li><i class="fas fa-check-circle"></i>Truy cập tất cả tài nguyên</li>
-                                <li><i class="fas fa-check-circle"></i>Tải xuống không giới hạn</li>
-                                <li><i class="fas fa-check-circle"></i>Hỗ trợ qua email</li>
-                                <li><i class="fas fa-times-circle text-gray-400"></i>Tài nguyên cao cấp</li>
-                            </ul>
+                        <div class="form-group">
+                            <label for="password" class="sr-only">Mật khẩu</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fas fa-lock icon"></i>
+                                <input type="password" id="password" placeholder="Mật khẩu" class="input-field pl-10" required>
+                            </div>
+                            <p id="password-error" class="error-message"></p>
                         </div>
-                        <button class="btn-select" data-package-name="Tiêu Chuẩn" data-package-duration="/tháng" data-package-price="99000">Chọn gói</button>
-                    </div>
-
-                    <div class="vip-package-card recommend premium">
-                        <span class="badge">Đề xuất</span>
-                        <div>
-                            <h3 class="package-title text-orange-500">Gói Tập Vụ</h3>
-                            <p class="package-price">111.111 đ<span class="package-duration">/6 tháng</span></p>
-                            <p class="text-sm text-gray-500 dark:text-gray-500 mb-4">Giá tốt nhất cho 6 tháng</p>
-                            <ul class="package-features">
-                                <li><i class="fas fa-check-circle"></i>Tất cả tính năng gói Tiêu Chuẩn</li>
-                                <li><i class="fas fa-check-circle"></i>Truy cập tài nguyên Cao cấp</li>
-                                <li><i class="fas fa-check-circle"></i>Cập nhật sớm</li>
-                                <li><i class="fas fa-check-circle"></i>Hỗ trợ ưu tiên 24/7</li>
-                            </ul>
+                        <div class="flex items-center justify-between mb-4 text-sm">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="remember-me" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mr-2">
+                                <label for="remember-me" class="text-gray-600 dark:text-gray-300">Nhớ tôi</label>
+                            </div>
+                            <a href="#" class="text-blue-600 hover:text-blue-500 transition-colors">Quên mật khẩu?</a>
                         </div>
-                        <button class="btn-select" data-package-name="Tập Vụ" data-package-duration="/6 tháng" data-package-price="111111">Chọn gói</button>
-                    </div>
+                        <button type="submit" class="btn btn-primary w-full">Đăng nhập</button>
+                        <p id="login-message" class="form-message"></p>
+                    </form>
+                </div>
+            </div>
 
-                    <div class="vip-package-card">
-                        <div>
-                            <h3 class="package-title text-green-600">Gói Doanh Nghiệp</h3>
-                            <p class="package-price">399.000 đ<span class="package-duration">/năm</span></p>
-                            <p class="text-sm text-gray-500 dark:text-gray-500 mb-4">Giải pháp toàn diện cho Studio</p>
-                            <ul class="package-features">
-                                <li><i class="fas fa-check-circle"></i>Tất cả tính năng gói Tập Vụ</li>
-                                <li><i class="fas fa-check-circle"></i>Nhiều tài khoản</li>
-                                <li><i class="fas fa-check-circle"></i>Tùy chỉnh tài nguyên theo yêu cầu</li>
-                                <li><i class="fas fa-check-circle"></i>Hỗ trợ riêng biệt</li>
-                            </ul>
+            <div id="bind-accounts-modal" class="modal-overlay hidden">
+                <div class="modal-content bind-accounts-modal-content">
+                    <button class="modal-close-btn"><i class="fas fa-times"></i></button>
+                    <h2 class="modal-title">Liên kết tài khoản bên ngoài</h2>
+                    <p class="text-center text-gray-600 dark:text-gray-400 mb-8">Liên kết các tài khoản mạng xã hội của bạn để dễ dàng xác minh khi cần.</p>
+
+                    <div class="bind-accounts-grid">
+                        <div class="bind-card" data-platform="Youtube">
+                            <div class="card-header">
+                                <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/4a7ffb07ad4095c2e2bc3b3903aa3918.png" alt="Youtube" class="platform-icon">
+                                <h4 class="card-title">Youtube</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="youtube-id">UID Youtube:</label>
+                                    <input type="text" id="youtube-id" placeholder="VD: @dat-09" class="input-field" required>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-secondary btn-sm"><i class="fas fa-edit mr-1"></i> Thay đổi liên kết</button>
+                                <button class="btn btn-primary btn-sm"><i class="fas fa-check mr-1"></i> Nộp</button>
+                            </div>
                         </div>
-                        <button class="btn-select" data-package-name="Doanh Nghiệp" data-package-duration="/năm" data-package-price="399000">Liên hệ</button>
+
+                        <div class="bind-card" data-platform="Tiktok">
+                            <div class="card-header">
+                                <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/tiktok-logo-tik-tok-logo-icon-png-svg.png" alt="Tiktok" class="platform-icon">
+                                <h4 class="card-title">Tiktok</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="tiktok-id">Số tài khoản Tiktok:</label>
+                                    <input type="text" id="tiktok-id" placeholder="VD: tiktok.com/@ytb_mhm" class="input-field" required>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-secondary btn-sm"><i class="fas fa-edit mr-1"></i> Thay đổi liên kết</button>
+                                <button class="btn btn-primary btn-sm"><i class="fas fa-check mr-1"></i> Nộp</button>
+                            </div>
+                        </div>
+
+                        <div class="bind-card" data-platform="Facebook">
+                            <div class="card-header">
+                                <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/facebook-logo-icon-isolated-on-transparant-background-free-png.png" alt="Facebook" class="platform-icon">
+                                <h4 class="card-title">Facebook</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="facebook-id">ID Facebook:</label>
+                                    <input type="text" id="facebook-id" placeholder="VD: 12345678" class="input-field" required>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-secondary btn-sm"><i class="fas fa-edit mr-1"></i> Thay đổi liên kết</button>
+                                <button class="btn btn-primary btn-sm"><i class="fas fa-check mr-1"></i> Nộp</button>
+                            </div>
+                        </div>
+
+                        <div class="register-new-platform-card">
+                            <div class="card-header flex items-center justify-between">
+                                <h4 class="card-title">Đăng ký Nền tảng khác</h4>
+                                <button class="btn btn-danger btn-sm flex items-center flex-1"><i class="fas fa-trash-alt mr-1"></i> Xóa hàng loạt</button>
+                            </div>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th>Số sê-ri</th>
+                                        <th>Tên nền tảng</th>
+                                        <th>Tài khoản</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td colspan="3" class="text-center text-gray-500 py-4">Không có dữ liệu nào</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                                Lưu ý: Đối với các nền tảng khác, không cần phải liên kết với tấc cả, chỉ cần chỉnh sửa và gửi đi
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="payment-warning-modal" class="modal-overlay hidden">
-            <div class="modal-content ultra-large-modal payment-warning-modal-content">
-                <button class="modal-close-btn"><i class="fas fa-times"></i></button>
-                <div class="payment-warning-modal-layout">
-                    <div class="payment-sidebar">
-                        <button class="back-btn"><i class="fas fa-arrow-left"></i> Chọn gói khác</button>
-                        <h3 class="sidebar-title">Đơn hàng của bạn</h3>
-                        <p class="sidebar-subtitle">Kiểm tra thông tin trước khi thanh toán</p>
-                        <div class="order-summary-card">
-                            <div class="order-item">
-                                <span>Gói dịch vụ</span>
-                                <span class="font-medium" id="order-package-name">Gói Tập Vụ</span>
-                            </div>
-                            <div class="order-item mt-2">
-                                <span>Thời hạn</span>
-                                <span class="font-medium" id="order-package-duration">/6 tháng</span>
-                            </div>
-                            <div class="order-item mt-4">
-                                <span>Giá gốc</span>
-                                <span class="font-bold text-lg" id="order-original-price">111.111 đ</span>
-                            </div>
-                        </div>
-                        <div class="total-summary-card mt-4">
-                            <div class="order-item">
-                                <span>Tổng thanh toán</span>
-                                <span class="font-bold text-2xl text-blue-600" id="order-total-price">111.111 đ</span>
-                            </div>
-                        </div>
-                        <div class="discount-input-wrapper mt-4">
-                            <i class="fas fa-tags icon"></i>
-                            <input type="text" placeholder="Nhập mã giảm giá" id="discount-code-input">
-                            <button class="btn-apply" id="apply-discount-btn">Áp dụng</button>
-                        </div>
-                    </div>
-                    <div class="payment-main">
-                        <h3 class="modal-subtitle mb-4">Chọn phương thức thanh toán</h3>
-                        <div class="payment-methods-grid">
-                            <div class="payment-method-card active" data-method="qr">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png" alt="QR Code" class="payment-method-icon">
-                                <div class="payment-method-info">
-                                    <p class="payment-method-title">Chuyển khoản QR Code</p>
-                                    <p class="payment-method-description">Thanh toán nhanh qua ứng dụng ngân hàng</p>
-                                </div>
-                                <i class="fas fa-check-circle text-blue-600 check-icon"></i>
-                            </div>
-                            <div class="payment-method-card" data-method="bank-transfer">
-                                <i class="fas fa-university payment-method-icon"></i>
-                                <div class="payment-method-info">
-                                    <p class="payment-method-title">Chuyển khoản Ngân hàng</p>
-                                    <p class="payment-method-description">Thanh toán truyền thống</p>
-                                </div>
-                                <i class="fas fa-check-circle text-blue-600 check-icon"></i>
-                            </div>
-                            <div class="payment-method-card disabled" data-method="momo">
-                                <img src="https://img.mservice.io/momo_app_v2/img/logo-momo.png" alt="MoMo" class="payment-method-icon">
-                                <div class="payment-method-info">
-                                    <p class="payment-method-title">Ví điện tử MoMo</p>
-                                    <p class="payment-method-description">Đang tạm ngưng</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="payment-details-qr" class="payment-details-section">
-                            <h4 class="font-semibold text-gray-800 dark:text-gray-100 mt-6 mb-3">Chi tiết thanh toán QR</h4>
-                            <div class="qr-code-display bg-gray-100 dark:bg-gray-800 p-4 rounded-lg flex flex-col items-center">
-                                <img src="https://via.placeholder.com/250" alt="Mã QR" id="qr-code-img" class="w-48 h-48 border border-gray-300 dark:border-gray-700 rounded-lg mb-3">
-                                <p class="text-sm text-center text-gray-700 dark:text-gray-300">Quét mã QR để thanh toán chính xác **<span id="qr-amount">111.111 đ</span>**</p>
-                                <button class="btn btn-secondary btn-sm mt-3"><i class="fas fa-copy mr-1"></i> Sao chép nội dung</button>
-                            </div>
-                        </div>
-
-                        <div id="payment-details-bank-transfer" class="payment-details-section hidden">
-                            <h4 class="font-semibold text-gray-800 dark:text-gray-100 mt-6 mb-3">Chi tiết thanh toán Chuyển khoản</h4>
-                            <div class="bank-info-card">
-                                <div class="bank-info-item">
-                                    <span>Ngân hàng:</span>
-                                    <span class="font-medium">VIETCOMBANK</span>
-                                </div>
-                                <div class="bank-info-item">
-                                    <span>Số tài khoản:</span>
-                                    <span class="font-medium" id="bank-account-number">1234567890</span>
-                                    <button class="copy-btn"><i class="fas fa-copy"></i></button>
-                                </div>
-                                <div class="bank-info-item">
-                                    <span>Chủ tài khoản:</span>
-                                    <span class="font-medium">Mạc Hắc Minh</span>
-                                </div>
-                                <div class="bank-info-item">
-                                    <span>Số tiền:</span>
-                                    <span class="font-medium" id="bank-transfer-amount">111.111 đ</span>
-                                    <button class="copy-btn"><i class="fas fa-copy"></i></button>
-                                </div>
-                                <div class="bank-info-item">
-                                    <span>Nội dung chuyển khoản:</span>
-                                    <span class="font-medium text-red-500" id="transfer-content">TANUYEN_VIP_6M</span>
-                                    <button class="copy-btn"><i class="fas fa-copy"></i></button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-lg text-sm text-yellow-800 dark:text-yellow-300">
-                            <p class="font-medium mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>Lưu ý quan trọng:</p>
-                            <p>Vui lòng chuyển khoản chính xác số tiền và nội dung để hệ thống tự động kích hoạt gói VIP. Nếu có bất kỳ vấn đề gì, vui lòng liên hệ hỗ trợ.</p>
-                        </div>
-
-                        <button id="payment-complete-btn" class="btn btn-success w-full mt-6">Tôi đã thanh toán</button>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="bind-accounts-modal" class="modal-overlay hidden">
-            <div class="modal-content bind-accounts-modal-content">
-                <button class="modal-close-btn"><i class="fas fa-times"></i></button>
-                <h2 class="modal-title">Liên kết tài khoản bên ngoài</h2>
-                <p class="text-center text-gray-600 dark:text-gray-400 mb-8">Liên kết các tài khoản mạng xã hội của bạn để dễ dàng xác minh khi cần.</p>
-
-                <div class="bind-accounts-grid">
-                    <div class="bind-card" data-platform="Youtube">
-                        <div class="card-header">
-                            <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/4a7ffb07ad4095c2e2bc3b3903aa3918.png" alt="Youtube" class="platform-icon">
-                            <h4 class="card-title">Youtube</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="youtube-id">UID Youtube:</label>
-                                <input type="text" id="youtube-id" placeholder="VD: @dat-09" class="input-field" required>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-secondary btn-sm"><i class="fas fa-edit mr-1"></i> Thay đổi liên kết</button>
-                            <button class="btn btn-primary btn-sm"><i class="fas fa-check mr-1"></i> Nộp</button>
-                        </div>
-                    </div>
-
-                    <div class="bind-card" data-platform="Tiktok">
-                        <div class="card-header">
-                            <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/tiktok-logo-tik-tok-logo-icon-png-svg.png" alt="Tiktok" class="platform-icon">
-                            <h4 class="card-title">Tiktok</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="tiktok-id">Số tài khoản Tiktok:</label>
-                                <input type="text" id="tiktok-id" placeholder="VD:tiktok.com/@ytb_mhm" class="input-field" required>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-secondary btn-sm"><i class="fas fa-edit mr-1"></i> Thay đổi liên kết</button>
-                            <button class="btn btn-primary btn-sm"><i class="fas fa-check mr-1"></i> Nộp</button>
-                        </div>
-                    </div>
-
-                    <div class="bind-card" data-platform="Facebook">
-                        <div class="card-header">
-                            <img src="https://uploads.onecompiler.io/43japmv3b/447cmv6tu/facebook-logo-icon-isolated-on-transparant-background-free-png.png" alt="Facebook" class="platform-icon">
-                            <h4 class="card-title">Facebook</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="facebook-id">ID Facebook:</label>
-                                <input type="text" id="facebook-id" placeholder="VD: 12345678" class="input-field" required>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-secondary btn-sm"><i class="fas fa-edit mr-1"></i> Thay đổi liên kết</button>
-                            <button class="btn btn-primary btn-sm"><i class="fas fa-check mr-1"></i> Nộp</button>
-                        </div>
-                    </div>
-
-                    <div class="register-new-platform-card">
-                        <div class="card-header flex items-center justify-between">
-                            <h4 class="card-title">Đăng ký Nền tảng khác</h4>
-                            <button class="btn btn-danger btn-sm flex items-center flex-1"><i class="fas fa-trash-alt mr-1"></i> Xóa hàng loạt</button>
-                        </div>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th>Số seri</th>
-                                    <th>Tên nền tảng</th>
-                                    <th>Tài khoản</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td colspan="3" class="text-center text-gray-500 py-4">Không có dữ liệu nào</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                            Lưu ý: Đối với các nền tảng khác, không cần phải liên kết với tấc cả, chỉ cần chỉnh sửa và gửi đi
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
-
