@@ -912,3 +912,39 @@ body.dark .register-new-platform-card tbody tr:nth-child(even) {
     transform: none;
     box-shadow: none;
 }
+/* Đảm bảo khu vực nội dung chính sử dụng màu nền đồng nhất */
+.main-content-area {
+    /* Đảm bảo khu vực này luôn sử dụng màu nền chính của trang */
+    background-color: var(--bg-main);
+
+    /* Thiết lập padding-bottom để tạo khoảng trống dưới cùng */
+    padding-bottom: 3rem;
+}
+
+/* Resources Grid: Đảm bảo nó có chiều cao tối thiểu để ngăn collapse */
+.resources-grid {
+    /* ... Giữ nguyên các thuộc tính khác ... */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+
+    /* [QUAN TRỌNG] Đảm bảo khu vực lưới luôn có chiều cao. */
+    min-height: 40vh;
+}
+
+/* Empty Message: Đảm bảo nó chiếm đủ không gian khi hiển thị */
+.empty-message {
+    /* ... Giữ nguyên các thuộc tính khác ... */
+
+    /* Đảm bảo nó chiếm toàn bộ chiều rộng của lưới */
+    grid-column: 1 / -1;
+
+    align-items: center;
+    justify-content: center;
+
+    /* [THÊM HOẶC CHỈNH SỬA] Chiều cao và nền */
+    min-height: 250px;
+    background-color: var(--bg-card); /* Sử dụng màu card để nó nổi bật một chút so với nền chính */
+    border: 1px dashed var(--border-color);
+    border-radius: 0.75rem;
+}
