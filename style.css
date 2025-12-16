@@ -1023,3 +1023,194 @@ html.dark #close-embed-btn:hover {
 #close-embed-btn i {
     margin-right: 8px;
 }
+/* 1. Ẩn thanh cuộn mặc định của các trình duyệt khác (Chủ yếu WebKit: Chrome, Safari) */
+::-webkit-scrollbar {
+    width: 12px; /* Độ rộng của thanh cuộn dọc */
+    height: 12px; /* Độ cao của thanh cuộn ngang */
+}
+
+/* 2. Tạo rãnh (track) cho thanh cuộn */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Nền sáng */
+    border-radius: 10px;
+}
+
+/* 3. Tạo thanh nắm (thumb) */
+::-webkit-scrollbar-thumb {
+    background: #888; /* Màu xám đậm */
+    border-radius: 10px;
+}
+
+/* 4. Hiệu ứng khi di chuột qua thanh nắm */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Màu xám tối hơn */
+}
+
+/* 5. Tối ưu hóa cho Chế độ Tối (Dark Mode) */
+html.dark ::-webkit-scrollbar-track {
+    background: #1f2937; /* Màu nền tối (dark-gray-800) */
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+    background: #4b5563; /* Màu thanh nắm tối (dark-gray-600) */
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280; /* Màu hover tối (dark-gray-500) */
+}
+
+/* TÙY CHỈNH CHO FIREFOX (Ít tùy biến hơn Webkit) */
+/* Áp dụng cho body (toàn trang) */
+body {
+    scrollbar-color: #888 #f1f1f1; /* thumb color track color */
+    scrollbar-width: thin; /* Kích thước thanh cuộn: auto, thin, none */
+}
+
+html.dark body {
+    scrollbar-color: #4b5563 #1f2937;
+}
+/* ========================================================= */
+/* 2. TÙY CHỈNH HỘP SELECT (SẮP XẾP THEO) */
+/* ========================================================= */
+
+/* Target the select element inside the sorting div */
+.flex > span + label > select {
+    /* Tắt mũi tên mặc định của trình duyệt */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    /* Thêm một chút padding để chừa chỗ cho mũi tên tùy chỉnh */
+    padding-right: 25px;
+
+    /* Đảm bảo nền màu trắng/tối theo chế độ */
+    background-color: var(--bg-white, #FFFFFF);
+    color: var(--text-color, #1a202c); /* Màu chữ */
+
+    /* Thiết lập border cơ bản */
+    border: 1px solid #E2E8F0;
+    border-radius: 8px; /* Bo tròn góc */
+}
+
+/* Thêm mũi tên tùy chỉnh */
+.flex > span + label {
+    position: relative; /* Đảm bảo select box là vị trí tham chiếu */
+}
+
+.flex > span + label::after {
+    content: '\f078'; /* Mã Unicode của icon Chevron Down (Font Awesome) */
+    font-family: 'Font Awesome 6 Free'; /* Chỉ định Font Awesome */
+    font-weight: 900;
+
+    position: absolute;
+    top: 50%;
+    right: 8px; /* Vị trí mũi tên */
+    transform: translateY(-50%);
+
+    color: #4A5568; /* Màu icon */
+    pointer-events: none; /* Đảm bảo có thể click qua icon để chọn */
+    font-size: 10px;
+}
+
+
+/* --- Chế độ tối (Dark Mode cho Select) --- */
+html.dark .flex > span + label > select {
+    background-color: #2D3748; /* Dark Gray 800 */
+    color: #EDF2F7; /* Light Gray 100 */
+    border-color: #4A5568; /* Dark Gray 700 */
+}
+
+html.dark .flex > span + label::after {
+    color: #A0AEC0; /* Light Gray 400 */
+}
+/* ========================================================= */
+/* 2. TÙY CHỈNH THÔNG BÁO TÀI NGUYÊN (EMPTY MESSAGE) */
+/* ĐÃ CHỈNH SỬA CHO KÍCH THƯỚC BÉ HƠN */
+/* ========================================================= */
+
+/* Áp dụng cho container chính */
+.empty-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* 1. GIẢM CHIỀU CAO CONTAINER */
+    min-height: 150px; /* Giảm từ 300px xuống 150px */
+
+    width: 100%;
+
+    /* 2. GIẢM KÍCH THƯỚC CHỮ */
+    font-size: 1.2rem; /* Giảm từ 1.8rem xuống 1.2rem */
+
+    font-weight: 700;
+    flex-wrap: wrap;
+    line-height: 1.2;
+}
+
+/* Các span (từng chữ cái) */
+.empty-message span {
+    display: inline-block;
+    opacity: 1;
+    margin: 0 1px;
+
+    animation-name: colorChange, bounceEffect;
+    animation-duration: 4s, 1s;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+    animation-direction: alternate, alternate;
+}
+
+/* -------------------------------------- */
+/* @keyframes 2: Hiệu ứng Nhảy (Bounce) */
+/* -------------------------------------- */
+@keyframes bounceEffect {
+    0%   { transform: translateY(0); }
+    /* 3. GIẢM BIÊN ĐỘ NHẢY */
+    50%  { transform: translateY(-2px); } /* Giảm từ -5px xuống -2px */
+    100% { transform: translateY(0); }
+}
+
+/* @keyframes 1: Hiệu ứng Đổi Màu Cầu Vồng (GIỮ NGUYÊN) */
+@keyframes colorChange {
+    /* ... (Giữ nguyên) ... */
+}
+.page {
+    display: none;
+    animation: fade 0.4s ease;
+}
+
+.page.active {
+    display: block;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.pagination button {
+    padding: 12px 28px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #3498db;
+    color: white;
+    transition: 0.3s;
+}
+
+.pagination button:hover {
+    background: #2980b9;
+}
+
+.pagination button:disabled {
+    background: #777;
+    cursor: not-allowed;
+}
+
+@keyframes fade {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
