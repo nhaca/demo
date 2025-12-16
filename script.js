@@ -389,4 +389,73 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. CHẠY LẦN ĐẦU KHI TẢI TRANG
     document.querySelector('.category-tab[data-cat="nhanvat"]')?.classList.add('active');
     filterCards(); // Bắt đầu bằng việc lọc và hiển thị trang đầu tiên
+    // START: LOGIC CHẾ ĐỘ NHÚNG IFRAME (Embed Mode Logic)
+    // -------------------------------------------------------------
+    const resourceContent = document.getElementById('resource-content');
+    const embedWrapper = document.getElementById('embed-wrapper');
+    const toolIframe = document.getElementById('tool-iframe');
+    const embedTitle = document.getElementById('embed-title');
+    const closeEmbedBtn = document.getElementById('close-embed-btn');
+
+    // 1. Hàm kích hoạt chế độ nhúng
+    function activateEmbedMode(toolId) {
+        if (!resourceContent || !embedWrapper || !toolIframe || !embedTitle) {
+            console.error("Thiếu các phần tử cần thiết cho chế độ nhúng.");
+            return;
+        }
+
+        let url = '';
+        let title = '';
+
+        if (toolId === 'veo3') {
+            url = 'https://labs.google/fx/tools/flow';
+            title = 'Công cụ: AI veo3';
+        } else if (toolId === 'nano-pro') {
+            // Thay thế bằng URL thực tế của Nano Banana Pro nếu có
+            url = 'https://r.search.yahoo.com/rdclks/dWU9M3JsbXZnNWtrMnBhNSZ1dD0xNzY1ODkzNDQ1MzExJnVvPTc0MDExMjE3NzM5OTAxJmx0PTImcz0xJmVzPS5fdG5DZGVJa19DTE5wenNNZU1oRlFLUGhEMjhwZzFCQjF6dmdvMG1LWWFpaURmdzFwSUhRWTZnZlRhcmZIYWoyaWhMcTBNLkZMZy5mNjQt/RV=2/RE=1768485445/RO=14/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de8OsbFkR-DQ_1BFvjv7ZG-ADVUCUyCPDgT5Tu2V0jYDrzojY3RMDWHnhS3_xHoVMUaCVdi_Bg4FvP47xhO3eMPVLqkGByGhaQd40xMJrO1-Cg1JfKYT7CupCtHEWESJPhOc3AD1VrbcwdT7atyEem2xAvsWDF-LuoT_qmdQcxadNOSKsa_9oSBondhgQOwHcIGct_aK3GDRQQixU8iHna1SCSbdP8%26u%3daHR0cHMlM2ElMmYlMmZoaXguYWklMmZpbWFnZS1tb2RlbHMlMmZnb29nbGUtbmFuby1iYW5hbmElMmZuYW5vLWJhbmFuYS1wcm8lM2Z1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZsYW5ndWFnZSUzZGVuJTI2Y2FtcGFpZ25pZCUzZDU3MDY5NjEzOCUyNmFkZ3JvdXBpZCUzZDExODQxNzYwMzk3MjM4MDMlMjZrZXl3b3JkJTNkbmFubyUyNTIwYmFuYW5hJTI1MjBhaSUyNmRldmljZSUzZGMlMjZtc2Nsa2lkJTNkZDAyMjMwMmI5MWZiMTVjZTVhYWQ1OTZhZjRiZTY2NTIlMjZ1dG1fY2FtcGFpZ24lM2RZb2t5X1NTX0ltYWdlX0NQX0VOXyVlNSU5YiU5YiVlNSVhNCVhN18wLjhfTmFub18xMTIxJTI2dXRtX3Rlcm0lM2RuYW5vJTI1MjBiYW5hbmElMjUyMGFpJTI2dXRtX2NvbnRlbnQlM2RuYW5vJTI1MjBiYW5hbmE%26rlid%3dd022302b91fb15ce5aad596af4be6652/RK=2/RS=RVXJSHvRI3JwQRLqGzivPd.n_QA-;_ylt=Awr9.5NFZUFppO0DaHFXNyoA;_ylu=Y29sbwNncTEEcG9zAzMEdnRpZAMEc2VjA292LXRvcA--;_ylc=X3IDMgRydAMw?IG=0afdfb937e8d42478d62cd35cc61384b';
+            title = 'Công cụ: Nano Banana Pro';
+        } else {
+            console.warn('Tool ID không hợp lệ:', toolId);
+            return;
+        }
+
+        // Ẩn nội dung tài nguyên chính
+        resourceContent.style.display = 'none';
+
+        // Cập nhật iframe và hiển thị wrapper
+        embedTitle.textContent = title;
+        toolIframe.src = url;
+        embedWrapper.style.display = 'block';
+
+        // Cuộn lên đầu trang (Tùy chọn)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 2. Hàm tắt chế độ nhúng
+    function deactivateEmbedMode() {
+        if (resourceContent && embedWrapper && toolIframe) {
+            embedWrapper.style.display = 'none';
+            toolIframe.src = ''; // Xóa URL để giải phóng tài nguyên
+            resourceContent.style.display = 'block';
+        }
+    }
+
+    // 3. Sự kiện lắng nghe cho các nút Công cụ AI
+    document.querySelectorAll('.dropdown-item[data-tool-id]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const toolId = e.currentTarget.getAttribute('data-tool-id');
+            activateEmbedMode(toolId);
+            // Đóng dropdown menu sau khi nhấp
+            e.currentTarget.closest('.dropdown')?.classList.remove('active');
+        });
+    });
+
+    // 4. Sự kiện lắng nghe cho nút "Đóng Công cụ"
+    if (closeEmbedBtn) {
+        closeEmbedBtn.addEventListener('click', deactivateEmbedMode);
+    }
+    // -------------------------------------------------------------
+    // END: LOGIC CHẾ ĐỘ NHÚNG IFRAME
+    // -------------------------------------------------------------
 });
