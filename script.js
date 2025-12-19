@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // =======================================================
     // I. KHAI BÁO BIẾN VÀ HẰNG SỐ (Tập trung lại)
     // =======================================================
-    const ITEMS_PER_PAGE = 18; // Theo yêu cầu gần nhất của bạn
+    const ITEMS_PER_PAGE = 20; // Theo yêu cầu gần nhất của bạn
     let isLoggedIn = false;
 
     const categoryTabsAll = document.querySelectorAll('.category-tab');
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         paginationContainer.style.display = 'flex';
 
         // Nút Prev
-        const prevBtn = createPageButton('◀ Trước', currentPage - 1, currentPage === 1);
+        const prevBtn = createPageButton('Trước', currentPage - 1, currentPage === 1);
         paginationContainer.appendChild(prevBtn);
 
         // Logic hiển thị nút số trang (5 nút chính + 1 và cuối + dots)
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Nút Next
-        const nextBtn = createPageButton('Sau ▶', currentPage + 1, currentPage === pageCount);
+        const nextBtn = createPageButton('Sau', currentPage + 1, currentPage === pageCount);
         paginationContainer.appendChild(nextBtn);
     }
 
@@ -226,6 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ">
                     ⚠️ Truy cập bị hạn chế<br>
                     Vui lòng đóng DevTools
+                    hoặc kiểm tra độ zoom trang của bạn
                 </div>
             `;
         }
@@ -548,4 +549,5 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.category-tab[data-cat="nhanvat"]')?.classList.add('active');
     wrapLetters('empty-message'); // Bật animation cho tin nhắn rỗng
     filterCards(); // Bắt đầu bằng việc lọc và hiển thị trang đầu tiên
+
 });
